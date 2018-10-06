@@ -10,13 +10,14 @@ import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
 import com.example.budalajedna.nfctryout.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements ViewModelMain.Callback, NFCManager.Callback{
+public class MainActivity extends AppCompatActivity implements /*ViewModelMain.Callback,*/ NFCManager.Callback{
 
     private NFCManager nfcManager;
     private ViewModelMain viewModelMain;
@@ -38,38 +39,32 @@ public class MainActivity extends AppCompatActivity implements ViewModelMain.Cal
     protected void onResume() {
 
         Intent intent = getIntent();
-        if(intent!=null) {
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-                Parcelable[] rawMessages = intent.getParcelableArrayExtra(
-                        NfcAdapter.EXTRA_NDEF_MESSAGES);
-                NdefMessage message = (NdefMessage) rawMessages[0];
-                toastMaker(message.toString());
-            }
+        String action = intent.getAction();
+        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+            toastMaker(nfcManager.ndefDiscovered(intent));
         }
         super.onResume();
     }
 
-    @Override
-    public void startClick() {
+//    @Override
+    public void startClick(View view) {
         sender = true;
         //nfcInitialise();
     }
 
-    @Override
-    public void sendClick() {
+    /*@Override*/
+    public void sendClick(View view) {
         /*if(nfcManager!=null) nfcManager.sendMessage("Proba");*/
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        setIntent(intent);
 
-        if(tag!=null){
-            Ndef ndef = Ndef.get(tag);
-
-            if(sender) nfcManager.onNfcDetected(ndef,"Zdravo!");
-            else nfcManager.onNfcDetected(ndef);
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())){
+            toastMaker(nfcManager.ndefDiscovered(intent));
         }
+
         super.onNewIntent(intent);
     }
 
