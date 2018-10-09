@@ -2,23 +2,18 @@ package com.example.budalajedna.nfctryout.connection;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Parcelable;
-import android.nfc.tech.Ndef;
 import android.widget.Toast;
-
-import java.io.IOException;
 
 public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
     private NfcAdapter nfcAdapter;
     private Activity activity;
     private static final String messageToSend = "Bravo legendo!";
-    private Callback callback;
 
     public NFCManager(Activity activity) {
         this.activity = activity;
@@ -32,65 +27,30 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
         nfcAdapter.setOnNdefPushCompleteCallback(this,activity);
     }
 
-    //TAKE #2
+    public String getTextFromBeam(Intent intent){
 
-//    public void onNfcDetected(Ndef ndef, String message) {
-//        writeToNfc(ndef, message);
-//    }
-//
-//    public void onNfcDetected(Ndef ndef) {
-//        readFromNfc(ndef);
-//    }
-//
-//    private void writeToNfc(Ndef ndef, String message) {
-//        if (ndef != null) {
-//            try {
-//                ndef.connect();
-//                NdefRecord record = NdefRecord.createMime("text/plain", message.getBytes(Charset.defaultCharset()));
-//                ndef.writeNdefMessage(new NdefMessage(record));
-//                ndef.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (FormatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//
-    public void readFromNfc(Ndef ndef) {
-        try {
-            ndef.connect();
-            NdefMessage ndefMessage = ndef.getNdefMessage();
-            String message = new String(ndefMessage.getRecords()[0].getPayload());
-            callback.messageReceived(message);
-            ndef.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (FormatException e) {
-            e.printStackTrace();
-        }
-    }
+        Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage inNdefMessage = (NdefMessage)parcelables[0];
+        NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+        NdefRecord ndefRecord_0 = inNdefRecords[0];
 
-
-    /*TAKE 3*/
-
-    public String ndefDiscovered(Intent intent){
-        Parcelable[] parcelables =
-                intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-
-        NdefMessage inNdeMessage = (NdefMessage) parcelables[0];
-        NdefRecord[] inNdeRecords = inNdeMessage.getRecords();
-        NdefRecord ndefRecord_0 = inNdeRecords[0];
         return new String(ndefRecord_0.getPayload());
     }
 
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        NdefRecord rtdUriRecord = NdefRecord.createUri(messageToSend);
 
-        NdefMessage ndefMessageOut = new NdefMessage(rtdUriRecord);
-        return ndefMessageOut;
+        byte[] bytesOut = messageToSend.getBytes();
+
+        NdefRecord ndefRecordOut = new NdefRecord(
+                NdefRecord.TNF_MIME_MEDIA,
+                "text/plain".getBytes(),
+                new byte[] {},
+                bytesOut);
+
+        NdefMessage ndefMessageout = new NdefMessage(ndefRecordOut);
+        return ndefMessageout;
     }
 
     @Override
@@ -104,9 +64,5 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
                         Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    public interface Callback{
-        void messageReceived(String message);
     }
 }
