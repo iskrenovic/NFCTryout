@@ -14,29 +14,59 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.MainActivity">
-    
-        <Button
-            android:id="@+id/btStart"
+
+        <ImageButton
+            android:id="@+id/btFacebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Start"
-            android:onClick="startClick"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@{vm.facebook ? vm.btOn : vm.btOff}"
+            android:onClick="@{()->vm.facebookClick()}"
+            android:padding="25dp"
+            android:src="@{vm.facebook ? vm.srcFacebookOn : vm.srcFacebookOff}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btSend"
+        <!--android:background="@{vm.btInstagram}"-->
+        <!--android:src="@{vm.srcInstagram}"-->
+        <ImageButton
+            android:id="@+id/btInstagram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Send"
-            android:onClick="sendClick"
-            app:layout_constraintStart_toEndOf="@+id/btStart"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:padding="25dp"
+            app:layout_constraintEnd_toStartOf="@+id/btPhone"
+            app:layout_constraintStart_toEndOf="@+id/btFacebook"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!--android:background="@{vm.btContact}"-->
+        <!--android:onClick="@{()->vm.facebookClick()}"-->
+
+        <ImageButton
+            android:id="@+id/btPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="25dp"
+            android:src="@drawable/ic_phone_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:text="Poruka koja ce se poslati"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
