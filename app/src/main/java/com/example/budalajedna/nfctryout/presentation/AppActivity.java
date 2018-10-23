@@ -15,11 +15,18 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
 import com.example.budalajedna.nfctryout.databinding.ActivityMainBinding;
+import com.example.budalajedna.nfctryout.presentation.Share.ShareFragment;
+import com.example.budalajedna.nfctryout.presentation.Share.ShareViewModel;
+import com.example.budalajedna.nfctryout.presentation.Welcome.WelcomeFragment;
 
-public class MainActivity extends AppCompatActivity implements ViewModelMain.Callback, NFCManager.Callback{
+public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, NFCManager.Callback{
 
     private NFCManager nfcManager;
-    private ViewModelMain viewModelMain;
+    private ShareViewModel shareViewModel;
+
+    private WelcomeFragment fragmentWelcome;
+    private NoNfcFragment fragmentNoNfc;
+    private ShareFragment fragmentMain;
 
     private boolean sender = false;
 
@@ -27,11 +34,14 @@ public class MainActivity extends AppCompatActivity implements ViewModelMain.Cal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fragmentWelcome= new WelcomeFragment();
+        fragmentNoNfc=new NoNfcFragment();
+        fragmentMain=new ShareFragment();
+
         ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
-
-        viewModelMain = ViewModelProviders.of(this).get(ViewModelMain.class);
-
         nfcManager = new NFCManager(this);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.fragmentWelcome).commitAllowingStateLoss();
     }
 
     @Override
@@ -81,4 +91,6 @@ public class MainActivity extends AppCompatActivity implements ViewModelMain.Cal
     public void messageReceived(String message) {
         toastMaker(message);
     }
+
+
 }
