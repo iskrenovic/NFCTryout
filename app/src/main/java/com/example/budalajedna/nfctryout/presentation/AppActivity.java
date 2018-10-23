@@ -1,15 +1,11 @@
 package com.example.budalajedna.nfctryout.presentation;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
@@ -19,6 +15,7 @@ import com.example.budalajedna.nfctryout.presentation.Share.ShareFragment;
 import com.example.budalajedna.nfctryout.presentation.Share.ShareViewModel;
 import com.example.budalajedna.nfctryout.presentation.Welcome.WelcomeFragment;
 
+
 public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, NFCManager.Callback{
 
     private NFCManager nfcManager;
@@ -26,9 +23,7 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
     private WelcomeFragment fragmentWelcome;
     private NoNfcFragment fragmentNoNfc;
-    private ShareFragment fragmentMain;
-
-    private boolean sender = false;
+    private ShareFragment fragmentShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,50 +31,50 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
         fragmentWelcome= new WelcomeFragment();
         fragmentNoNfc=new NoNfcFragment();
-        fragmentMain=new ShareFragment();
+        fragmentShare=new ShareFragment();
 
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.fragment_share);
         nfcManager = new NFCManager(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.fragmentWelcome).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.fragmentShare).commitAllowingStateLoss();
+
+
+        nfcManager = new NFCManager(this);
+
+        nfcManager.setCallback(this);
     }
 
     @Override
     protected void onResume() {
 
-        Intent intent = getIntent();
-        if(intent!=null) {
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-                Parcelable[] rawMessages = intent.getParcelableArrayExtra(
-                        NfcAdapter.EXTRA_NDEF_MESSAGES);
-                NdefMessage message = (NdefMessage) rawMessages[0];
-                toastMaker(message.toString());
-            }
-        }
         super.onResume();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+            toastMaker(nfcManager.getTextFromBeam(intent));
+        }
     }
 
-    @Override
-    public void startClick() {
-        sender = true;
-        //nfcInitialise();
-    }
 
-    @Override
-    public void sendClick() {
-        /*if(nfcManager!=null) nfcManager.sendMessage("Proba");*/
-    }
+    //    @Override
+//    public void facebookClick(View view) {
+//
+//    }
+//
+//    @Override
+//    public void sendClick(View view) {
+//
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        setIntent(intent);
 
-        if(tag!=null){
-            Ndef ndef = Ndef.get(tag);
-
-            if(sender) nfcManager.onNfcDetected(ndef,"Zdravo!");
-            else nfcManager.onNfcDetected(ndef);
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())){
+            toastMaker(nfcManager.getTextFromBeam(intent));
         }
+
         super.onNewIntent(intent);
     }
 
@@ -88,9 +83,19 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
     }
 
     @Override
-    public void messageReceived(String message) {
-        toastMaker(message);
+    public String getMessage() {
+        EditText textView = findViewById(R.id.tv);
+        return textView.getText().toString();
     }
 
 
+    @Override
+    public void startClick() {
+
+    }
+
+    @Override
+    public void sendClick() {
+
+    }
 }

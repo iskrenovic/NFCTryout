@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
@@ -8,11 +8,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-<<<<<<< HEAD
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-=======
         <item name="android:windowBackground">@color/colorAccent</item>
->>>>>>> 3acc9d8f2a7e18128f48235b7e4f806961959e96
-    </style>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
 
+    </style>
 </resources>

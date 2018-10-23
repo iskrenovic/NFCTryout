@@ -12,7 +12,7 @@ public abstract class ShareFragmentBinding extends ViewDataBinding {
     }
 
 
-    public abstract void setVmGame(@Nullable ShareViewModel gameViewModel);
+    public abstract void setVm(@Nullable ShareViewModel gameViewModel);
     protected ShareFragmentBinding(android.databinding.DataBindingComponent _bindingComponent, View _root, int _localFieldCount){
         super(_bindingComponent, _root, _localFieldCount);
 

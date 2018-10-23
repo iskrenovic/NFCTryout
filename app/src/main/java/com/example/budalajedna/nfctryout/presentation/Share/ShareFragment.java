@@ -23,7 +23,7 @@ public class ShareFragment extends Fragment {
         View view  =this.binding.getRoot();
         this.binding.setLifecycleOwner(this);
         this.shareViewModel = (ShareViewModel) ViewModelProviders.of((Fragment) this).get(ShareViewModel.class);
-        this.binding.setVmGame(this.shareViewModel);
+        this.binding.setVm(this.shareViewModel);
 
 
 
