@@ -1,6 +1,7 @@
-package com.example.budalajedna.nfctryout.presentation.Share;
+package com.example.budalajedna.nfctryout.presentation.share;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,23 +12,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
+import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
 
 public class ShareFragment extends Fragment {
 
-    private ShareFragmentBinding binding;
+    private FragmentShareBinding binding;
     private ShareViewModel shareViewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.binding=(ShareFragmentBinding) DataBindingUtil.inflate(inflater, R.layout.fragment_share,container,false);
-        View view  =this.binding.getRoot();
-        this.binding.setLifecycleOwner(this);
-        this.shareViewModel = (ShareViewModel) ViewModelProviders.of((Fragment) this).get(ShareViewModel.class);
-        this.binding.setVm(this.shareViewModel);
 
+        binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_share,container,false);
 
+        View view  = this.binding.getRoot();
+
+        binding.setLifecycleOwner(this);
+
+        shareViewModel = ViewModelProviders.of(this).get(ShareViewModel.class);
+
+        shareViewModel.setFragment(this);
+
+        binding.setVm(this.shareViewModel);
 
         return view;
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 }

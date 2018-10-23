@@ -1,48 +1,33 @@
 package com.example.budalajedna.nfctryout.presentation;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
-import com.example.budalajedna.nfctryout.databinding.ActivityMainBinding;
-import com.example.budalajedna.nfctryout.presentation.Share.ShareFragment;
-import com.example.budalajedna.nfctryout.presentation.Share.ShareViewModel;
-import com.example.budalajedna.nfctryout.presentation.Welcome.WelcomeFragment;
+import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
+import com.example.budalajedna.nfctryout.presentation.share.ShareViewModel;
 
 
-public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, NFCManager.Callback{
+public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, IActivityCallback{
 
     private NFCManager nfcManager;
-    private ShareViewModel shareViewModel;
-
-    private WelcomeFragment fragmentWelcome;
-    private NoNfcFragment fragmentNoNfc;
-    private ShareFragment fragmentShare;
+    private ShareFragment shareFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fragmentWelcome= new WelcomeFragment();
-        fragmentNoNfc=new NoNfcFragment();
-        fragmentShare=new ShareFragment();
+        setContentView(R.layout.app_activity);
 
-
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.fragment_share);
-        nfcManager = new NFCManager(this);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.fragmentShare).commitAllowingStateLoss();
-
+        shareFragment = new ShareFragment();
 
         nfcManager = new NFCManager(this);
 
-        nfcManager.setCallback(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
     }
 
     @Override
@@ -55,17 +40,6 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
             toastMaker(nfcManager.getTextFromBeam(intent));
         }
     }
-
-
-    //    @Override
-//    public void facebookClick(View view) {
-//
-//    }
-//
-//    @Override
-//    public void sendClick(View view) {
-//
-//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -82,11 +56,7 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public String getMessage() {
-        EditText textView = findViewById(R.id.tv);
-        return textView.getText().toString();
-    }
+
 
 
     @Override
@@ -98,4 +68,5 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
     public void sendClick() {
 
     }
+
 }

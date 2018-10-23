@@ -13,7 +13,6 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
 
     private NfcAdapter nfcAdapter;
     private Activity activity;
-    private Callback callback;
     private static final String messageToSend = "Bravo legendo!";
 
     public NFCManager(Activity activity) {
@@ -28,9 +27,6 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
         nfcAdapter.setOnNdefPushCompleteCallback(this,activity);
     }
 
-    public void setCallback(Callback callback) {
-        this.callback = callback;
-    }
 
     public String getTextFromBeam(Intent intent){
 
@@ -46,7 +42,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
 
-        byte[] bytesOut = callback.getMessage().getBytes();
+        byte[] bytesOut = "tekst".getBytes();
 
         NdefRecord ndefRecordOut = new NdefRecord(
                 NdefRecord.TNF_MIME_MEDIA,
@@ -69,9 +65,5 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
                         Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    public interface Callback{
-        String getMessage();
     }
 }
