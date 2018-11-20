@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
+import com.example.budalajedna.nfctryout.presentation.input.InputFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareViewModel;
 
@@ -16,6 +17,7 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
     private NFCManager nfcManager;
     private ShareFragment shareFragment;
+    private InputFragment inputFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,8 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         setContentView(R.layout.app_activity);
 
         shareFragment = new ShareFragment();
+
+        inputFragment = new InputFragment();
 
         nfcManager = new NFCManager(this);
 
