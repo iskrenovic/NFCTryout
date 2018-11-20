@@ -1,21 +1,27 @@
 package com.example.budalajedna.nfctryout.presentation;
 
+import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
+import com.example.budalajedna.nfctryout.datahandling.AddContact;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareViewModel;
 
+import java.util.ArrayList;
 
-public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, IActivityCallback{
+
+public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, IActivityCallback,AddContact.ContactCallback {
 
     private NFCManager nfcManager;
     private ShareFragment shareFragment;
+    private AddContact addContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,14 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         setContentView(R.layout.app_activity);
 
         shareFragment = new ShareFragment();
+        addContact=new AddContact(this.getApplicationContext(),this);
+
+        // ova linija ce da se obrise
+        // umesto toga ce kad primi poruku nfc manager da zove callback do add contact pa onda da ide do
+        // add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)
+        addContact.AddNumber("Neko","1234");
+
+
 
         nfcManager = new NFCManager(this);
 
@@ -59,6 +73,7 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
 
 
+
     @Override
     public void startClick() {
 
@@ -69,4 +84,13 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
     }
 
+    @Override
+    public void AddContact(ArrayList<ContentProviderOperation> operations) {
+        try {
+            this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
+            Toast.makeText(this.getApplicationContext(),"Dodat broj", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this.getApplicationContext(),"Nije dodat broj", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
