@@ -120,14 +120,6 @@ public class ShareViewModel extends ViewModel {
     }
 
     public void facebookClick(){
-
-        /*if(facebook.getValue()){
-            facebook.setValue(false);
-        }
-        else {
-            facebook.setValue(true);
-        }*/
-
         facebook.setValue(!facebook.getValue());
     }
 

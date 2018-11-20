@@ -11,22 +11,27 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
 
-import com.example.budalajedna.nfctryout.presentation.input.InputFragment;
+import com.example.budalajedna.nfctryout.datahandling.User;
+import com.example.budalajedna.nfctryout.presentation.input.InputContactFragment;
 
 import com.example.budalajedna.nfctryout.datahandling.AddContact;
 
+import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareViewModel;
 
 import java.util.ArrayList;
 
 
-public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, IActivityCallback,AddContact.ContactCallback {
+public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, MainCallback,AddContact.ContactCallback, InputEmailFragment.callback {
 
     private NFCManager nfcManager;
     private ShareFragment shareFragment;
 
-    private InputFragment inputFragment;
+    private User user;
+
+    private InputContactFragment inputContactFragment;
+    private InputEmailFragment inputEmailFragment;
 
     private AddContact addContact;
 
@@ -46,7 +51,11 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
 
 
-        inputFragment = new InputFragment();
+        inputContactFragment = new InputContactFragment();
+
+        inputEmailFragment = new InputEmailFragment();
+
+        inputEmailFragment.setCallbacks(this,this);
 
         nfcManager = new NFCManager(this);
 
@@ -101,5 +110,15 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         } catch (Exception e) {
             Toast.makeText(this.getApplicationContext(),"Nije dodat broj", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void nextEmailFragment() {
+
     }
 }

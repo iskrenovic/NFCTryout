@@ -1,11 +1,8 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
-import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.provider.ContactsContract;
-import android.widget.Toast;
-
 
 import java.util.ArrayList;
 
