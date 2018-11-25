@@ -6,16 +6,15 @@ import android.arch.lifecycle.ViewModel;
 
 public class InputEmailViewModel extends ViewModel {
 
-    private MutableLiveData<String> text;
     private MutableLiveData<String> email;
     private callback callback;
 
-    public InputEmailViewModel(callback callback){
-
-        this.callback = callback;
-        text = new MutableLiveData<>();
+    public InputEmailViewModel(){
         email = new MutableLiveData<>();
-        text.setValue("Ovde upisati email adresu");
+    }
+
+    public void setCallback(InputEmailViewModel.callback callback) {
+        this.callback = callback;
     }
 
     public void nextFragment(){
@@ -32,10 +31,6 @@ public class InputEmailViewModel extends ViewModel {
 
     public LiveData<String> getEmail() {
         return email;
-    }
-
-    public LiveData<String> getText() {
-        return text;
     }
 
     public interface callback{

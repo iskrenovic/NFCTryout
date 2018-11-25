@@ -34,6 +34,8 @@ public class InputEmailFragment extends Fragment implements InputEmailViewModel.
 
         viewModel = ViewModelProviders.of(this).get(InputEmailViewModel.class);
 
+        viewModel.setCallback(this);
+
         binding.setVm(this.viewModel);
 
         return view;

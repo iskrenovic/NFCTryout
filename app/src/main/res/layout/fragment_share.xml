@@ -59,6 +59,34 @@
 
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/btEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@{vm.email ? vm.btOn : vm.btOff}"
+            android:onClick="@{()->vm.emailClick()}"
+            android:padding="25dp"
+            android:src="@{vm.email ? vm.srcEmailOn : vm.srcEmailOff}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btFacebook" />
+
+        <ImageView
+            android:id="@+id/btNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/custom_button"
+            android:padding="10dp"
+            android:onClick="@{()->vm.next()}"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

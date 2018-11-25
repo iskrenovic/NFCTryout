@@ -5,33 +5,45 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.NFCManager;
 
+import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.User;
-import com.example.budalajedna.nfctryout.presentation.input.InputContactFragment;
+import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 
 import com.example.budalajedna.nfctryout.datahandling.AddContact;
 
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
+import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
-import com.example.budalajedna.nfctryout.presentation.share.ShareViewModel;
 
 import java.util.ArrayList;
 
-
-public class AppActivity extends AppCompatActivity implements ShareViewModel.Callback, MainCallback,AddContact.ContactCallback, InputEmailFragment.callback {
+public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback,AddContact.ContactCallback,
+        InputEmailFragment.callback, InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback  {
 
     private NFCManager nfcManager;
     private ShareFragment shareFragment;
 
+
+    private ReadWriteClient readWriteClient;
     private User user;
 
-    private InputContactFragment inputContactFragment;
+    private HelloFragment helloFragment;
+
+    private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
+
+    private AllDoneFragment allDoneFragment;
+
+    private boolean[] mediaToShare;
+    private final int mediaNumber = 4;
 
     private AddContact addContact;
 
@@ -41,25 +53,42 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
 
         setContentView(R.layout.app_activity);
 
+        readWriteClient = new ReadWriteClient(this);
+
+        /*addContact=new AddContact(this.getApplicationContext(),this);
+         ova linija ce da se obrise
+         umesto toga ce kad primi poruku nfc manager da zove Callback do add contact pa onda da ide do
+         add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)
+        addContact.AddNumber("Neko","1234");*/
+
         shareFragment = new ShareFragment();
-        addContact=new AddContact(this.getApplicationContext(),this);
+        shareFragment.setCallback(this);
 
-        // ova linija ce da se obrise
-        // umesto toga ce kad primi poruku nfc manager da zove callback do add contact pa onda da ide do
-        // add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)
-        addContact.AddNumber("Neko","1234");
+        helloFragment = new HelloFragment();
+        helloFragment.setCallbacks(this, this);
 
-
-
-        inputContactFragment = new InputContactFragment();
+        inputPhoneNumberFragment = new InputPhoneNumberFragment();
+        inputPhoneNumberFragment.setCallbacks(this);
 
         inputEmailFragment = new InputEmailFragment();
-
         inputEmailFragment.setCallbacks(this,this);
+
+        allDoneFragment = new AllDoneFragment();
+        allDoneFragment.setCallbacks(this);
 
         nfcManager = new NFCManager(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
+        user = new User();
+
+        String userInfo = readWriteClient.read();
+
+        if(userInfo.equals("")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.helloFragment).commitAllowingStateLoss();
+        }
+        else{
+            user.set(userInfo);
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -88,19 +117,22 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-
-
-
-
-    @Override
-    public void startClick() {
-
+    private int getNextMediaIndex(int startIndex){
+        for (int i = startIndex; i < mediaNumber; i++) {
+            if(mediaToShare[i]) return i;
+        }
+        return -1;
+    }
+    //Za sad ovako slepacki izgleda, jbg. Kad se napravi Facebook i Insta bice bolje :)
+    private Fragment getFragment(int index){
+        switch (index){
+            case 2:
+                return inputPhoneNumberFragment;
+            default:
+                return inputEmailFragment;
+        }
     }
 
-    @Override
-    public void sendClick() {
-
-    }
 
     @Override
     public void AddContact(ArrayList<ContentProviderOperation> operations) {
@@ -120,5 +152,26 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
     @Override
     public void nextEmailFragment() {
 
+    }
+
+    @Override
+    public void nextAllDone() {
+        readWriteClient.save(user.read());
+    }
+
+    @Override
+    public void nextContact() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(3))).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void nextHello() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void nextShare(boolean[] mediaToShare) {
+        this.mediaToShare = mediaToShare;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(0))).commitAllowingStateLoss();
     }
 }

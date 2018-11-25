@@ -4,18 +4,21 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentIcontactBinding;
 
-public class InputContactFragment extends Fragment {
+
+public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumberViewModel.Callback{
 
     private FragmentIcontactBinding binding;
-    private InputContactViewModel viewModel;
+    private InputPhoneNumberViewModel viewModel;
+
+    private Callback callback;
 
     @Nullable
     @Override
@@ -25,12 +28,25 @@ public class InputContactFragment extends Fragment {
 
         binding.setLifecycleOwner(this);
 
-        viewModel = ViewModelProviders.of(this).get(InputContactViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(InputPhoneNumberViewModel.class);
 
-        viewModel.setFragment(this);
+        viewModel.setCallback(this);
 
         binding.setVm(this.viewModel);
 
         return this.binding.getRoot();
+    }
+
+    public void setCallbacks(Callback callback){
+        this.callback = callback;
+    }
+
+    @Override
+    public void nextFragment() {
+        callback.nextContact();
+    }
+
+    public interface Callback{
+        void nextContact();
     }
 }

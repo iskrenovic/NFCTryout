@@ -1,48 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="vm"
-            type="com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberViewModel"/>
+            type="com.example.budalajedna.nfctryout.presentation.hello.HelloViewModel"/>
     </data>
-
     <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
+    
         <TextView
-            android:id="@+id/tv"
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            android:text="Upišite svoj broj telefona ovde"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="Zdravo i doboršli u HandShake, aplikaciju za brzo i efikasno deljenje kontakt informacija svih vrsta. Za početak, upišite svoje ime i prezime."
             android:textAlignment="center"
-            android:textSize="20pt"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15pt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/etPhoneNumber"
+            android:id="@+id/etName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:textColor="@color/colorPrimary"
             android:ems="10"
-            android:inputType="phone"
+            android:inputType="text"
+            android:hint="ime i prezime"
+            android:backgroundTint="#FF000000"
+            android:text="@{vm.name}"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <ImageView
             android:id="@+id/btNext"
@@ -51,12 +50,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/custom_button"
-            android:onClick="@{()->vm.nextFragment()}"
+            android:onClick="@{()->vm.nextStep()}"
             android:padding="10dp"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
-
 </layout>

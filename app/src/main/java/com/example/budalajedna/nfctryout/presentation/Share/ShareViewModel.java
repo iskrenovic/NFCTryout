@@ -11,6 +11,7 @@ import com.example.budalajedna.nfctryout.R;
 public class ShareViewModel extends ViewModel {
 
     private ShareFragment fragment;
+    private Callback callback;
 
     private MutableLiveData<Drawable> btOn;
     private MutableLiveData<Drawable> btOff;
@@ -26,6 +27,10 @@ public class ShareViewModel extends ViewModel {
     private MutableLiveData<Drawable> srcContactOn;
     private MutableLiveData<Drawable> srcContactOff;
     private MutableLiveData<Boolean>  contact;
+
+    private MutableLiveData<Drawable> srcEmailOn;
+    private MutableLiveData<Drawable> srcEmailOff;
+    private MutableLiveData<Boolean> email;
 
     public ShareViewModel(){
 
@@ -46,6 +51,11 @@ public class ShareViewModel extends ViewModel {
         srcContactOff = new MutableLiveData<>();
         contact = new MutableLiveData<>();
         contact.setValue(false);
+
+        srcEmailOn = new MutableLiveData<>();
+        srcEmailOff = new MutableLiveData<>();
+        email = new MutableLiveData<>();
+        email.setValue(false);
     }
 
     public LiveData<Drawable> getBtOn(){
@@ -99,8 +109,24 @@ public class ShareViewModel extends ViewModel {
         return contact;
     }
 
+
+    /*EMAIL*/
+
+    public LiveData<Drawable> getSrcEmailOn() {
+        return srcEmailOn;
+    }
+
+    public LiveData<Drawable> getSrcEmailOff() {
+        return srcEmailOff;
+    }
+
+    public LiveData<Boolean> getEmail() {
+        return email;
+    }
+
     public void setFragment(ShareFragment fragment) {
         this.fragment = fragment;
+        callback = fragment;
         prepareIcons();
     }
 
@@ -117,6 +143,9 @@ public class ShareViewModel extends ViewModel {
 
         srcContactOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_color));
         srcContactOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_white));
+
+        srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_color));
+        srcEmailOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
     }
 
     public void facebookClick(){
@@ -131,9 +160,17 @@ public class ShareViewModel extends ViewModel {
         contact.setValue(!contact.getValue());
     }
 
+    public void emailClick(){
+        email.setValue(!email.getValue());
+    }
+
+    public void next(){
+        boolean[] mediaToShare = {facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue()};
+        callback.proceed(mediaToShare);
+
+    }
     public interface Callback{
-        void startClick();
-        void sendClick();
+        void proceed(boolean[] mediaToShare);
     }
 
 }

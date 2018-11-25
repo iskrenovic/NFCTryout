@@ -2,38 +2,45 @@ package com.example.budalajedna.nfctryout.datahandling;
 
 import android.content.Context;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class ReadWriteClient {
+    private Context context;
+    private static final String filename = "ConnectClientInfo.cnt";
 
-    File file;
-    Context context;
-    private static final String filename = "ConnectClientInfo";
-
-    public ReadWriteClient(){
-
+    public ReadWriteClient(Context context){
+        this.context = context;
     }
 
-    public void readClient(){
+    public String read(){
         FileInputStream fileInputStream;
+        String out = "";
         try {
-            fileInputStream = context.openFileInput(filename);
-//            char[] fileContent = new char[fileInputStream.read()];
-            while(fileInputStream.read()!=-1){
 
+            fileInputStream = context.openFileInput(filename);
+
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String receiveString = "";
+            StringBuilder stringBuilder = new StringBuilder();
+
+
+            while ( (receiveString = bufferedReader.readLine()) != null ) {
+                stringBuilder.append(receiveString);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+
+            out = stringBuilder.toString();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
+        return out;
     }
 
-    public void writeClient(String info){
+    public void save(String info){
 
         FileOutputStream outputStream;
         try {

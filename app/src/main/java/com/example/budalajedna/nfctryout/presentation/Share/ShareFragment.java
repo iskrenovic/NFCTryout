@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
 
-public class ShareFragment extends Fragment {
+public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     private FragmentShareBinding binding;
     private ShareViewModel shareViewModel;
+
+    private Callback callback;
 
     @Nullable
     @Override
@@ -38,8 +40,21 @@ public class ShareFragment extends Fragment {
         return view;
     }
 
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void proceed(boolean[] mediaToShare) {
+        callback.nextShare(mediaToShare);
+    }
+
+    public interface Callback{
+        void nextShare(boolean[] mediaToShare);
     }
 }
