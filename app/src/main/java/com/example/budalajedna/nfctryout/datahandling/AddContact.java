@@ -14,7 +14,7 @@ public class AddContact{
         this.callback=callback;
     }
 
-    public void AddNumber(String contactName,String phoneNumber){
+    public void AddNumber(String contactName,String phoneNumber,String mail){
 
         ArrayList<ContentProviderOperation> operations=new ArrayList<ContentProviderOperation>();
 
@@ -42,8 +42,18 @@ public class AddContact{
                     .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
                     .build());
         }
-        callback.AddContact(operations);
 
+
+        //Dodaje mail
+        if (mail != null) {
+            operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, mail)
+                    .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_MOBILE)
+                    .build());
+        }
+        callback.AddContact(operations);
 
 
     }

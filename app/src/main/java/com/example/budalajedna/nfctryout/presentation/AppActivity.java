@@ -47,7 +47,7 @@ public class AppActivity extends AppCompatActivity implements ShareViewModel.Cal
         // ova linija ce da se obrise
         // umesto toga ce kad primi poruku nfc manager da zove callback do add contact pa onda da ide do
         // add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)
-        addContact.AddNumber("Neko","1234");
+        addContact.AddNumber("Neko","1234","neko@gmail");
 
 
 
