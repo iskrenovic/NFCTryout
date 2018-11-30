@@ -1,13 +1,33 @@
 package com.example.budalajedna.nfctryout.presentation.input;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.text.Editable;
 
 public class InputPhoneNumberViewModel extends ViewModel {
 
     Callback callback;
 
-    public InputPhoneNumberViewModel() {
+    MutableLiveData<String> phoneNumber;
 
+    public InputPhoneNumberViewModel(){
+        phoneNumber = new MutableLiveData<>();
+    }
+
+    public void textChanged(Editable editable){
+        if(phoneNumber.getValue()!=null) {
+            if (!phoneNumber.getValue().equals(editable.toString())) {
+                phoneNumber.setValue(editable.toString());
+            }
+        }
+        else {
+            phoneNumber.setValue(editable.toString());
+        }
+    }
+
+    public LiveData<String> getPhoneNumber() {
+        return phoneNumber;
     }
 
     public void setCallback(Callback callback){
@@ -15,10 +35,10 @@ public class InputPhoneNumberViewModel extends ViewModel {
     }
 
     public void nextFragment(){
-        callback.nextFragment();
+        callback.nextFragment(phoneNumber.getValue());
     }
 
     public interface Callback{
-        void nextFragment();
+        void nextFragment(String phoneNumber);
     }
 }

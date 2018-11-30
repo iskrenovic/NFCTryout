@@ -38,6 +38,8 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:textColor="@color/colorPrimary"
+            android:text="@{vm.phoneNumber}"
+            android:afterTextChanged="@{vm::textChanged}"
             android:ems="10"
             android:inputType="phone"
             app:layout_constraintEnd_toEndOf="parent"

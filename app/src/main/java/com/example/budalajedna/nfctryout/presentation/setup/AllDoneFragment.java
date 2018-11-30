@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentAlldoneBinding;
+import com.example.budalajedna.nfctryout.presentation.MainCallback;
 
 public class AllDoneFragment extends Fragment implements AllDoneViewModel.callback{
 
     FragmentAlldoneBinding binding;
     AllDoneViewModel viewModel;
+    MainCallback mainCallback;
 
     Callback Callback;
 
@@ -34,11 +36,21 @@ public class AllDoneFragment extends Fragment implements AllDoneViewModel.callba
 
         binding.setVm(this.viewModel);
 
+        viewModel.setCallback(this);
+
+        saveUser();
+
         return view;
     }
 
-    public void setCallbacks(Callback Callback){
+    public void setCallbacks(Callback Callback, MainCallback mainCallback){
+
         this.Callback = Callback;
+        this.mainCallback = mainCallback;
+    }
+
+    public void saveUser(){
+        mainCallback.getReadWriteClient().save(mainCallback.getUser().read());
     }
 
     @Override

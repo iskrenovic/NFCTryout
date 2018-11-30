@@ -3,13 +3,9 @@ package com.example.budalajedna.nfctryout.datahandling;
 public class User {
 
     private String contactName;
-    private int phoneNumber;
+    private String phoneNumber;
 
     private String email;
-
-    public User(){
-        phoneNumber = -1;
-    }
 
     public String read(){
 
@@ -17,11 +13,11 @@ public class User {
         if(contactName!=null){
             out += "//" + "CONTACTNAME>>" + contactName + "**";
         }
-        if(phoneNumber !=-1){
+        if(phoneNumber!=null){
             out += "//" + "PHONENUMBER>>" + phoneNumber + "**";
         }
         if(email!=null){
-            out += "//" + "EMAIL>>" + phoneNumber + "**";
+            out += "//" + "EMAIL>>" + email + "**";
         }
         return out;
     }
@@ -32,16 +28,16 @@ public class User {
             String type = info.substring(2, info.indexOf(">>"));
             switch (type) {
                 case "CONTACTNAME":
-                    contactName = info.substring(info.indexOf(">>"), info.indexOf("**"));
+                    contactName = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
                 case "PHONENUMBER":
-                    phoneNumber = Integer.valueOf(info.substring(info.indexOf(">>"), info.indexOf("**")));
+                    phoneNumber = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
                 case "EMAIL":
-                    email = info.substring(info.indexOf(">>"), info.indexOf("**"));
+                    email = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
             }
-            info = info.substring(info.indexOf("**"));
+            info = info.substring(info.indexOf("**") + 2);
         }
     }
 
@@ -49,7 +45,7 @@ public class User {
         this.contactName = contactName;
     }
 
-    public void setPhoneNumber(int phoneNumber){
+    public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
 

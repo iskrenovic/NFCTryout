@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
 public class ReadWriteClient {
     private Context context;
-    private static final String filename = "ConnectClientInfo.cnt";
+    private static final String filename = "ConnectClientInfo.ncg";
 
     public ReadWriteClient(Context context){
         this.context = context;

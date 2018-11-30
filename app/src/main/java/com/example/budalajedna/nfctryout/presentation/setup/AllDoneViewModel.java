@@ -5,7 +5,8 @@ import android.arch.lifecycle.ViewModel;
 public class AllDoneViewModel extends ViewModel {
 
     private callback callback;
-    public AllDoneViewModel(callback callback){
+
+    public void setCallback(callback callback) {
         this.callback = callback;
     }
 

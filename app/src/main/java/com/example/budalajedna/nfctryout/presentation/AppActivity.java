@@ -69,13 +69,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         helloFragment.setCallbacks(this, this);
 
         inputPhoneNumberFragment = new InputPhoneNumberFragment();
-        inputPhoneNumberFragment.setCallbacks(this);
+        inputPhoneNumberFragment.setCallbacks(this, this);
 
         inputEmailFragment = new InputEmailFragment();
         inputEmailFragment.setCallbacks(this,this);
 
         allDoneFragment = new AllDoneFragment();
-        allDoneFragment.setCallbacks(this);
+        allDoneFragment.setCallbacks(this, this);
 
         nfcManager = new NFCManager(this);
 
@@ -129,8 +129,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         switch (index){
             case 2:
                 return inputPhoneNumberFragment;
-            default:
+            case 3:
                 return inputEmailFragment;
+            default:
+                return allDoneFragment;
         }
     }
 
@@ -151,8 +153,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     }
 
     @Override
-    public void nextEmailFragment() {
+    public ReadWriteClient getReadWriteClient() {
+        return readWriteClient;
+    }
 
+    @Override
+    public void nextEmailFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(4))).commitAllowingStateLoss();
     }
 
     @Override

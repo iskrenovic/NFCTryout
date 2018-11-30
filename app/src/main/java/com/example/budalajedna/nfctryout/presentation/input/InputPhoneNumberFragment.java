@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentIcontactBinding;
+import com.example.budalajedna.nfctryout.presentation.MainCallback;
 
 
 public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumberViewModel.Callback{
@@ -19,6 +20,7 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
     private InputPhoneNumberViewModel viewModel;
 
     private Callback callback;
+    private MainCallback mainCallback;
 
     @Nullable
     @Override
@@ -37,12 +39,14 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
         return this.binding.getRoot();
     }
 
-    public void setCallbacks(Callback callback){
+    public void setCallbacks(Callback callback, MainCallback mainCallback){
+        this.mainCallback = mainCallback;
         this.callback = callback;
     }
 
     @Override
-    public void nextFragment() {
+    public void nextFragment(String phoneNumber) {
+        mainCallback.getUser().setPhoneNumber(phoneNumber);
         callback.nextContact();
     }
 
