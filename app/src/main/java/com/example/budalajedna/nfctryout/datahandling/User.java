@@ -22,7 +22,9 @@ public class User {
         return out;
     }
 
-    public void set(String info){
+    public boolean[] set(String info){
+
+        boolean[] out = new boolean[4];
 
         while(!info.equals("")) {
             String type = info.substring(2, info.indexOf(">>"));
@@ -31,14 +33,25 @@ public class User {
                     contactName = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
                 case "PHONENUMBER":
+                    out[2] = true;
                     phoneNumber = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
                 case "EMAIL":
+                    out[3] = true;
                     email = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
                     break;
             }
             info = info.substring(info.indexOf("**") + 2);
         }
+        return out;
+    }
+
+    public String getPhoneNumber(){
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setContactName(String contactName){

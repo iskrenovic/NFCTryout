@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.Animation;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
@@ -29,21 +32,19 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         InputEmailFragment.callback, InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback  {
 
     private NFCManager nfcManager;
-    private ShareFragment shareFragment;
-
-
     private ReadWriteClient readWriteClient;
     private User user;
 
     private HelloFragment helloFragment;
-
+    private ShareFragment shareFragment;
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
-
     private AllDoneFragment allDoneFragment;
 
     private boolean[] mediaToShare;
     private final int mediaNumber = 4;
+    private Animation animation;
+    private TextView textView;
 
     private AddContact addContact;
 
@@ -55,12 +56,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
         readWriteClient = new ReadWriteClient(this);
 
+        textView = findViewById(R.id.textView);
+
 
         /*addContact=new AddContact(this.getApplicationContext(),this);
          ova linija ce da se obrise
          umesto toga ce kad primi poruku nfc manager da zove Callback do add contact pa onda da ide do
          add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)       addContact.AddNumber("Neko","1234");*/
-
 
         shareFragment = new ShareFragment();
         shareFragment.setCallback(this);
@@ -87,10 +89,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.helloFragment).commitAllowingStateLoss();
         }
         else{
-            user.set(userInfo);
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
+            shareFragment.setButtonStates(user.set(userInfo));
         }
     }
+
+
 
     @Override
     protected void onResume() {

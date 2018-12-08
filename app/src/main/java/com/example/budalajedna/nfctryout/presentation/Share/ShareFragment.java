@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
+import com.example.budalajedna.nfctryout.presentation.MediaType;
 
 public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
@@ -20,6 +21,8 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     private ShareViewModel shareViewModel;
 
     private Callback callback;
+
+    private boolean[] buttonStates;
 
     @Nullable
     @Override
@@ -37,11 +40,31 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
         binding.setVm(this.shareViewModel);
 
+        if(buttonStates!=null) setButtonClicked();
+
         return view;
     }
 
     public void setCallback(Callback callback) {
+
         this.callback = callback;
+    }
+
+    public void setButtonStates(boolean[] buttonStates){
+        this.buttonStates = buttonStates;
+    }
+
+    public void setButtonClicked(){
+        if(buttonStates[MediaType.phoneNumber.getValue()]) shareViewModel.contactClick();
+        if(buttonStates[MediaType.email.getValue()]) shareViewModel.emailClick();
+    }
+
+    private boolean hasChanged(boolean[] mediaToShare){
+        int l = mediaToShare.length;
+        for (int i = 0; i < l; i++) {
+            if(mediaToShare[i] != buttonStates[i]) return true;
+        }
+        return false;
     }
 
     @Override
@@ -51,7 +74,7 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     @Override
     public void proceed(boolean[] mediaToShare) {
-        callback.nextShare(mediaToShare);
+        if(hasChanged(mediaToShare)) callback.nextShare(mediaToShare);
     }
 
     public interface Callback{
