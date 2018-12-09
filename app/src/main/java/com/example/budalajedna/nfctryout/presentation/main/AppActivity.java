@@ -1,11 +1,11 @@
-package com.example.budalajedna.nfctryout.presentation;
+package com.example.budalajedna.nfctryout.presentation.main;
 
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
@@ -13,14 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
-import com.example.budalajedna.nfctryout.connection.NFCManager;
+import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
+import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
-
-import com.example.budalajedna.nfctryout.datahandling.AddContact;
 
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
@@ -28,12 +27,13 @@ import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 
 import java.util.ArrayList;
 
-public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback,AddContact.ContactCallback,
-        InputEmailFragment.callback, InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback  {
+public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
+        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback {
 
     private NFCManager nfcManager;
     private ReadWriteClient readWriteClient;
     private User user;
+    private SharedUser sharedUser;
 
     private HelloFragment helloFragment;
     private ShareFragment shareFragment;
@@ -46,7 +46,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private Animation animation;
     private TextView textView;
 
-    private AddContact addContact;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +57,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         readWriteClient = new ReadWriteClient(this);
 
         textView = findViewById(R.id.textView);
-
-
-        /*addContact=new AddContact(this.getApplicationContext(),this);
-         ova linija ce da se obrise
-         umesto toga ce kad primi poruku nfc manager da zove Callback do add contact pa onda da ide do
-         add contact funkcije (cisto sam hteo da isprobam da dodam neki broj)       addContact.AddNumber("Neko","1234");*/
 
         shareFragment = new ShareFragment();
         shareFragment.setCallback(this);
@@ -82,6 +76,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         nfcManager = new NFCManager(this);
 
         user = new User();
+        sharedUser = new SharedUser(this);
 
         String userInfo = readWriteClient.read();
 
@@ -112,7 +107,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         setIntent(intent);
 
         if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())){
-            toastMaker(nfcManager.getTextFromBeam(intent));
+            sharedUser.save(nfcManager.getTextFromBeam(intent));
         }
 
         super.onNewIntent(intent);
@@ -140,20 +135,14 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         }
     }
 
-
-    @Override
-    public void AddContact(ArrayList<ContentProviderOperation> operations) {
-        try {
-            this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
-            Toast.makeText(this.getApplicationContext(),"Dodat broj", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this.getApplicationContext(),"Nije dodat broj", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 
     @Override
@@ -185,5 +174,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     public void nextShare(boolean[] mediaToShare) {
         this.mediaToShare = mediaToShare;
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(0))).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void addContact(ArrayList<ContentProviderOperation> operations) {
+        try{
+            this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
+        }
+        catch (Exception e){}
     }
 }

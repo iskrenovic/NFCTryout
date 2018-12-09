@@ -1,4 +1,4 @@
-package com.example.budalajedna.nfctryout.presentation;
+package com.example.budalajedna.nfctryout.presentation.main;
 
 public enum MediaType {
 

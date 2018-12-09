@@ -1,49 +1,37 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
+import org.json.JSONObject;
+
 public class User {
 
-    private String contactName;
-    private String phoneNumber;
+    private String contactName = "";
+    private String phoneNumber = "";
 
-    private String email;
+    private String email = "";
 
     public String read(){
 
-        String out = "";
-        if(contactName!=null){
-            out += "//" + "CONTACTNAME>>" + contactName + "**";
+        JSONObject object = new JSONObject();
+        try {
+            object.put("contactName", contactName);
+            object.put("phoneNumber", phoneNumber);
+            object.put("email",email);
         }
-        if(phoneNumber!=null){
-            out += "//" + "PHONENUMBER>>" + phoneNumber + "**";
-        }
-        if(email!=null){
-            out += "//" + "EMAIL>>" + email + "**";
-        }
-        return out;
+        catch (Exception e){}
+        return object.toString();
     }
 
     public boolean[] set(String info){
 
-        boolean[] out = new boolean[4];
+        try {
+            JSONObject object = new JSONObject(info);
 
-        while(!info.equals("")) {
-            String type = info.substring(2, info.indexOf(">>"));
-            switch (type) {
-                case "CONTACTNAME":
-                    contactName = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
-                    break;
-                case "PHONENUMBER":
-                    out[2] = true;
-                    phoneNumber = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
-                    break;
-                case "EMAIL":
-                    out[3] = true;
-                    email = info.substring(info.indexOf(">>") + 2, info.indexOf("**"));
-                    break;
-            }
-            info = info.substring(info.indexOf("**") + 2);
+            contactName = object.getString("contactName");
+            phoneNumber = object.getString("phoneNumber");
+            email = object.getString("email");
         }
-        return out;
+        catch (Exception e){}
+        return new boolean[] {false,false,phoneNumber!="", email!=""};
     }
 
     public String getPhoneNumber(){

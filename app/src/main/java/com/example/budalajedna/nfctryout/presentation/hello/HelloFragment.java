@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentHelloBinding;
-import com.example.budalajedna.nfctryout.presentation.MainCallback;
+import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 
 
 public class HelloFragment extends Fragment implements HelloViewModel.Callback{

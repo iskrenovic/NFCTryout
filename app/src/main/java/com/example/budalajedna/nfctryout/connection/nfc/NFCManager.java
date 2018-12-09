@@ -1,6 +1,5 @@
-package com.example.budalajedna.nfctryout.connection;
+package com.example.budalajedna.nfctryout.connection.nfc;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -9,22 +8,23 @@ import android.nfc.NfcEvent;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
+
 public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
     private NfcAdapter nfcAdapter;
-    private Activity activity;
-    private static final String messageToSend = "Bravo legendo!";
+    MainCallback mainCallback;
 
-    public NFCManager(Activity activity) {
-        this.activity = activity;
-        nfcAdapter = NfcAdapter.getDefaultAdapter(activity);
+    public NFCManager(MainCallback mainCallback) {
+        this.mainCallback = mainCallback;
+        nfcAdapter = NfcAdapter.getDefaultAdapter(mainCallback.getActivity());
         if (nfcAdapter == null) {
-            Toast.makeText(activity, "No NFC supported on this device.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainCallback.getActivity(), "No NFC supported on this device.", Toast.LENGTH_SHORT).show();
         } else if (!nfcAdapter.isEnabled()) {
-            Toast.makeText(activity, "Please enable NFC via Settings.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainCallback.getActivity(), "Please enable NFC via Settings.", Toast.LENGTH_SHORT).show();
         }
-        nfcAdapter.setNdefPushMessageCallback(this,activity);
-        nfcAdapter.setOnNdefPushCompleteCallback(this,activity);
+        nfcAdapter.setNdefPushMessageCallback(this,mainCallback.getActivity());
+        nfcAdapter.setOnNdefPushCompleteCallback(this,mainCallback.getActivity());
     }
 
 
@@ -42,7 +42,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
 
-        byte[] bytesOut = "tekst".getBytes();
+        byte[] bytesOut = mainCallback.getUser().read().getBytes();
 
         NdefRecord ndefRecordOut = new NdefRecord(
                 NdefRecord.TNF_MIME_MEDIA,
@@ -57,10 +57,10 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     @Override
     public void onNdefPushComplete(NfcEvent event) {
         final String eventString = "onNodePushComplete\n" + event.toString();
-        activity.runOnUiThread(new Runnable() {
+        mainCallback.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(activity.getApplicationContext(),
+                Toast.makeText(mainCallback.getActivity().getApplicationContext(),
                         eventString,
                         Toast.LENGTH_LONG).show();
             }

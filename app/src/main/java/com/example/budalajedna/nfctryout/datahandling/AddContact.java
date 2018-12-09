@@ -1,20 +1,18 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
 import android.content.ContentProviderOperation;
-import android.content.Context;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 
 public class AddContact{
-    private Context context;
     private ContactCallback callback;
-    public AddContact(Context context,ContactCallback callback) {
-        this.context=context;
+    public AddContact(ContactCallback callback) {
+
         this.callback=callback;
     }
 
-    public void AddNumber(String contactName,String phoneNumber,String mail){
+    public void addNumber(String contactName, String phoneNumber, String mail){
 
         ArrayList<ContentProviderOperation> operations=new ArrayList<ContentProviderOperation>();
 
@@ -25,7 +23,7 @@ public class AddContact{
                 .build());
 
         // Dodaje ime kontakta
-        if (contactName != null) {
+        if (contactName != "") {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE,ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
@@ -34,7 +32,7 @@ public class AddContact{
         }
 
         //Dodaje broj
-        if (phoneNumber != null) {
+        if (phoneNumber != "") {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
@@ -45,7 +43,7 @@ public class AddContact{
 
 
         //Dodaje mail
-        if (mail != null) {
+        if (mail != "") {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
@@ -53,11 +51,11 @@ public class AddContact{
                     .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_MOBILE)
                     .build());
         }
-        callback.AddContact(operations);
+        callback.addContact(operations);
 
 
     }
     public interface ContactCallback{
-        void AddContact(ArrayList<ContentProviderOperation> operations);
+        void addContact(ArrayList<ContentProviderOperation> operations);
     }
 }

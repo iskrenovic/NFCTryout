@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
-import com.example.budalajedna.nfctryout.presentation.MediaType;
+import com.example.budalajedna.nfctryout.presentation.main.MediaType;
 
 public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
@@ -74,7 +74,8 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     @Override
     public void proceed(boolean[] mediaToShare) {
-        if(hasChanged(mediaToShare)) callback.nextShare(mediaToShare);
+        if(buttonStates==null) callback.nextShare(mediaToShare);
+        else if(hasChanged(mediaToShare)) callback.nextShare(mediaToShare);
     }
 
     public interface Callback{
