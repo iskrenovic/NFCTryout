@@ -42,7 +42,7 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
 
-        byte[] bytesOut = mainCallback.getUser().read().getBytes();
+        byte[] bytesOut = mainCallback.getDeviceAdress().getBytes();
 
         NdefRecord ndefRecordOut = new NdefRecord(
                 NdefRecord.TNF_MIME_MEDIA,

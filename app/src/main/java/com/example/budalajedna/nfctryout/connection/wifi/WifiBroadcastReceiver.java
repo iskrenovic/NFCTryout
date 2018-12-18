@@ -11,6 +11,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +26,9 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
         public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
             if (wifiP2pInfo.groupFormed) {
                 if (wifiP2pInfo.isGroupOwner) {
-                    new ServerClass( this).start();
+                    new ServerClass( WifiBroadcastReceiver.this).start();
                 } else {
-                    new ClientClass(wifiP2pInfo.groupOwnerAddress, new C03382(), WifiBroadcastReceiver.this).start();
+                    new ClientClass(wifiP2pInfo.groupOwnerAddress, WifiBroadcastReceiver.this).start();
                 }
                 WifiBroadcastReceiver.this.callback.onConnected(wifiP2pInfo.isGroupOwner);
             }
@@ -40,9 +41,18 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
             
         }
     };
+
+    public WifiBroadcastReceiver(WifiP2pManager manager, Channel channel, @NonNull Callback callback) {
+        this.manager = manager;
+        this.channel = channel;
+        this.callback = callback;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+        if(device!=null)callback.onReceived(device.deviceAddress);
         if ("android.net.wifi.p2p.STATE_CHANGED".equals(action)) {
             callback.onWifiP2pStateChanged(intent.getIntExtra("wifi_p2p_state", -1) == 2);
         } else if ("android.net.wifi.p2p.PEERS_CHANGED".equals(action)) {
@@ -64,11 +74,11 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
     public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
         if (wifiP2pInfo.groupFormed) {
             if (wifiP2pInfo.isGroupOwner) {
-                new ServerClass(new C03371(), WifiBroadcastReceiver.this).start();
+                new ServerClass(this);
             } else {
-                new ClientClass(wifiP2pInfo.groupOwnerAddress, new C03382(), WifiBroadcastReceiver.this).start();
+                new ClientClass(wifiP2pInfo.groupOwnerAddress, this);
             }
-            WifiBroadcastReceiver.this.callback.onConnected(wifiP2pInfo.isGroupOwner);
+            callback.onConnected(wifiP2pInfo.isGroupOwner);
         }
     }
 
@@ -77,27 +87,16 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
         callback.onSendReceiveReady(sendReceive);
     }
 
+
     @Override
     public void onMessageReceive(String message) {
 
-        if (!this.initialisation) {
-            if (!message.equals("404")) {
-                if (!(message.equals("Ready") || message.equals("Game on"))) {
-                    if (!message.equals("Cancel")) {
-                        this.receiveOpponentsMove.ReceiveData(message);
-                        return;
-                    }
-                }
-                this.readyUpCallback.onReadyRecive(message);
-                return;
-            }
-        }
         this.callback.onMessageReceived(message);
         this.initialisation = false;
     }
 
     public interface Callback{
-        void onConnected(boolean z);
+        void onConnected(boolean groupOwner);
 
         void onDeviceUpdated(WifiP2pDevice wifiP2pDevice);
 
@@ -108,5 +107,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
         void onSendReceiveReady(SendReceive sendReceive);
 
         void onWifiP2pStateChanged(boolean z);
+
+        void onReceived(String deviceAdress);
     }
 }

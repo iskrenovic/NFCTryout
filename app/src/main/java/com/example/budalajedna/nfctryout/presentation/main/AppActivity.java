@@ -3,6 +3,8 @@ package com.example.budalajedna.nfctryout.presentation.main;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 
+import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
@@ -28,9 +31,11 @@ import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback {
+        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback {
 
     private NFCManager nfcManager;
+    private WifiManager wifiManager;
+
     private ReadWriteClient readWriteClient;
     private User user;
     private SharedUser sharedUser;
@@ -46,13 +51,14 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private Animation animation;
     private TextView textView;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.app_activity);
+
+        nfcManager = new NFCManager(this);
+        wifiManager = new WifiManager(this, this,this);
 
         readWriteClient = new ReadWriteClient(this);
 
@@ -73,8 +79,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         allDoneFragment = new AllDoneFragment();
         allDoneFragment.setCallbacks(this, this);
 
-        nfcManager = new NFCManager(this);
-
         user = new User();
         sharedUser = new SharedUser(this);
 
@@ -89,8 +93,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         }
     }
 
-
-
     @Override
     protected void onResume() {
 
@@ -98,7 +100,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         Intent intent = getIntent();
         String action = intent.getAction();
         if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
-            toastMaker(nfcManager.getTextFromBeam(intent));
+            wifiManager.connect(nfcManager.getTextFromBeam(intent));
         }
     }
 
@@ -107,7 +109,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         setIntent(intent);
 
         if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())){
-            sharedUser.save(nfcManager.getTextFromBeam(intent));
+            /*wifiManager.connect(nfcManager.getTextFromBeam(intent));*/
         }
 
         super.onNewIntent(intent);
@@ -139,6 +141,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     public User getUser() {
         return user;
     }
+
+    @Override
+    public String getDeviceAdress() {
+        return wifiManager.getDeviceAdress();
+    }
+
 
     @Override
     public Activity getActivity() {
@@ -182,5 +190,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
         }
         catch (Exception e){}
+    }
+
+    @Override
+    public void onInvitationSend(boolean sent) {
+
     }
 }
