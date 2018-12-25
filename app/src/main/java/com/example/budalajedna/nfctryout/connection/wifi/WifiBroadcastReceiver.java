@@ -16,7 +16,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientClass.Callback, ServerClass.Callback {
+public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientClass.Callback, ServerClass.Callback, WifiP2pManager.ConnectionInfoListener {
 
     private Callback callback;
     private Channel channel;
