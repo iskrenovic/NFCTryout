@@ -31,6 +31,10 @@ public class User {
             email = object.getString("email");
         }
         catch (Exception e){}
+        return getKnown();
+    }
+
+    public boolean[] getKnown(){
         return new boolean[] {false,false,phoneNumber!="", email!=""};
     }
 

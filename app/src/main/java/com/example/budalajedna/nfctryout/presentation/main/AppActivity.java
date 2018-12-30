@@ -123,6 +123,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         for (int i = startIndex; i < mediaNumber; i++) {
             if(mediaToShare[i]) return i;
         }
+        if(startIndex == 0) toastMaker("VEC STE UBACILI OVE INFORMACIJE");
         return -1;
     }
     //Za sad ovako slepacki izgleda, jbg. Kad se napravi Facebook i Insta bice bolje :)
@@ -166,6 +167,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     @Override
     public void nextAllDone() {
         readWriteClient.save(user.read());
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
+        shareFragment.setButtonStates(user.getKnown());
     }
 
     @Override
