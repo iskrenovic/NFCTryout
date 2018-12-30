@@ -24,6 +24,8 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
     private MainCallback mainCallback;
     private Callback callback;
 
+    private boolean searchStarted = false;
+
     public WifiManager(Context context, MainCallback mainCallback, Callback callback) {
         this.mainCallback = mainCallback;
         this.callback = callback;
@@ -47,22 +49,39 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
         context.registerReceiver(receiver, intentFilter);
     }
 
-    public void connect(String deviceAddress) {
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = deviceAddress;
-        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+    /*private void searchForPeers(){
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                WifiManager.this.connected = true;
-                WifiManager.this.callback.onInvitationSend(true);
+                searchStarted = true;
             }
 
             @Override
-            public void onFailure(int i) {
-                WifiManager.this.callback.onInvitationSend(false);
+            public void onFailure(int reason) {
+
             }
         });
-    }
+    }*/
+
+    public void connect(String deviceAddress) {
+        /*searchForPeers();
+        if(searchStarted) {*/
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = deviceAddress;
+            manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+                    WifiManager.this.connected = true;
+                    WifiManager.this.callback.onInvitationSend(true);
+                }
+
+                @Override
+                public void onFailure(int i) {
+                    WifiManager.this.callback.onInvitationSend(false);
+                }
+            });
+        }
+    /*}*/
 
     public String getDeviceAdress(){
         return deviceAdress;

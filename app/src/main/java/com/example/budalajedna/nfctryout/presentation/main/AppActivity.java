@@ -149,7 +149,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
 
     @Override
-    public Activity getActivity() {
+    public AppActivity getActivity() {
         return this;
     }
 
