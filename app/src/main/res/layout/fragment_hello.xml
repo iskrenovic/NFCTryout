@@ -39,6 +39,7 @@
             android:backgroundTint="#FF000000"
             android:text="@{vm.name}"
             android:textColor="@color/colorPrimary"
+            android:afterTextChanged="@{vm::textChanged}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />

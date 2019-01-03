@@ -1,10 +1,7 @@
 package com.example.budalajedna.nfctryout.presentation.main;
 
-import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,15 +13,13 @@ import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
-
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
-import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
-
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 
@@ -105,6 +100,26 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     }
 
     @Override
+    protected void onStop() {
+        disconnectWIFI();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        disconnectWIFI();
+        super.onDestroy();
+    }
+
+    private void disconnectWIFI(){
+        if(wifiManager.isRegistred()) {
+            wifiManager.unregisterReceiver();
+            wifiManager.disconnect();
+            wifiManager.setRegistred(false);
+        }
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
 
@@ -134,6 +149,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             case 3:
                 return inputEmailFragment;
             default:
+                readWriteClient.save(user.read());
                 return allDoneFragment;
         }
     }
@@ -192,11 +208,24 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         try{
             this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
         }
-        catch (Exception e){}
+        catch (Exception e){
+            toastMaker(e.toString());
+        }
+
+    }
+
+    @Override
+    public void userSaved() {
+        disconnectWIFI();
     }
 
     @Override
     public void onInvitationSend(boolean sent) {
 
+    }
+
+    @Override
+    public void onUserReceived(String info) {
+        sharedUser.save(info);
     }
 }

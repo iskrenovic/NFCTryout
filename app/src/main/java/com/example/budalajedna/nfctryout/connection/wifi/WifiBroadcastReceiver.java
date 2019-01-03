@@ -9,9 +9,8 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
-import android.support.annotation.NonNull;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +41,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
         }
     };
 
-    public WifiBroadcastReceiver(WifiP2pManager manager, Channel channel, @NonNull Callback callback) {
+    public WifiBroadcastReceiver(WifiP2pManager manager, Channel channel, Callback callback) {
         this.manager = manager;
         this.channel = channel;
         this.callback = callback;
@@ -52,7 +51,8 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-        if(device!=null)callback.onReceived(device.deviceAddress);
+        if(device!=null) callback.onReceiveNFC(device.deviceAddress);
+
         if ("android.net.wifi.p2p.STATE_CHANGED".equals(action)) {
             callback.onWifiP2pStateChanged(intent.getIntExtra("wifi_p2p_state", -1) == 2);
         } else if ("android.net.wifi.p2p.PEERS_CHANGED".equals(action)) {
@@ -88,13 +88,6 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
     }
 
 
-    @Override
-    public void onMessageReceive(String message) {
-
-        this.callback.onMessageReceived(message);
-        this.initialisation = false;
-    }
-
     public interface Callback{
         void onConnected(boolean groupOwner);
 
@@ -102,12 +95,10 @@ public class WifiBroadcastReceiver extends BroadcastReceiver implements ClientCl
 
         void onDevicesChanged(Collection<WifiP2pDevice> collection);
 
-        void onMessageReceived(String str);
-
         void onSendReceiveReady(SendReceive sendReceive);
 
         void onWifiP2pStateChanged(boolean z);
 
-        void onReceived(String deviceAdress);
+        void onReceiveNFC(String deviceAdress);
     }
 }

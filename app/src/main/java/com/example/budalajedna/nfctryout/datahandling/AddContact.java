@@ -12,7 +12,7 @@ public class AddContact{
         this.callback=callback;
     }
 
-    public void addNumber(String contactName, String phoneNumber, String mail){
+    public void addContactInfo(String contactName, String phoneNumber, String mail){
 
         ArrayList<ContentProviderOperation> operations=new ArrayList<ContentProviderOperation>();
 

@@ -21,9 +21,12 @@ public class SharedUser implements AddContact.ContactCallback {
 
         try {
             JSONObject object = new JSONObject(info);
-            addContact.addNumber(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"));
+            addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"));
+            callback.userSaved();
         }
-        catch (Exception e){}
+        catch (Exception e){
+
+        }
     }
 
     @Override
@@ -33,5 +36,6 @@ public class SharedUser implements AddContact.ContactCallback {
 
     public interface Callback {
         void addContact(ArrayList<ContentProviderOperation> operations);
+        void userSaved();
     }
 }

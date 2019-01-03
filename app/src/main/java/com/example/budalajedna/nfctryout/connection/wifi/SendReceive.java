@@ -13,18 +13,21 @@ public class SendReceive extends Thread {
 
     private InputStream inputStream;
     private OutputStream outputStream;
-    private Callback receiver;
+    private Callback callback;
     private Socket socket;
 
-    public SendReceive(Socket socket, Callback receiver) {
+    public SendReceive(Socket socket) {
         this.socket = socket;
-        this.receiver = receiver;
         try {
             inputStream = this.socket.getInputStream();
             outputStream = this.socket.getOutputStream();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage(), e);
         }
+    }
+
+    public void setCallback(Callback callback){
+        this.callback = callback;
     }
 
     public void run() {
@@ -35,7 +38,7 @@ public class SendReceive extends Thread {
                 if (!socket.isClosed()) {
                     bytes = inputStream.read(buffer);
                 }
-                if (bytes > 0 && receiver != null) {
+                if (bytes > 0 && callback != null) {
                     String message = new String(buffer);
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < message.length(); i++) {
@@ -53,7 +56,7 @@ public class SendReceive extends Thread {
     }
 
     void messageFound(StringBuilder stringBuilder) {
-        receiver.onReceive(stringBuilder.toString());
+        callback.onReceiveWIFI(stringBuilder.toString());
     }
 
 
@@ -80,6 +83,6 @@ public class SendReceive extends Thread {
     }
 
     public interface Callback {
-        void onReceive(String string);
+        void onReceiveWIFI(String string);
     }
 }

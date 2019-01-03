@@ -7,11 +7,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class ClientClass extends Thread implements SendReceive.Callback{
+public class ClientClass extends Thread{
     private static final String TAG = ClientClass.class.getSimpleName();
     private String hostAddress;
     private Callback callback;
-    private SendReceive sendReceive;
     private Socket socket = new Socket();
 
     public ClientClass(InetAddress hostAddress, Callback callback) {
@@ -23,7 +22,7 @@ public class ClientClass extends Thread implements SendReceive.Callback{
         super.run();
         try {
             socket.connect(new InetSocketAddress(hostAddress, 8888), 500);
-            sendReceive = new SendReceive(socket, this);
+            SendReceive sendReceive = new SendReceive(socket);
             callback.onSendReceiveReady(sendReceive);
             sendReceive.start();
         } catch (IOException e) {
@@ -31,14 +30,8 @@ public class ClientClass extends Thread implements SendReceive.Callback{
         }
     }
 
-    @Override
-    public void onReceive(String string) {
-        callback.onMessageReceive(string);
-    }
-
     public interface Callback {
         void onSendReceiveReady(SendReceive sendReceive);
-        void onMessageReceive(String string);
     }
 }
 

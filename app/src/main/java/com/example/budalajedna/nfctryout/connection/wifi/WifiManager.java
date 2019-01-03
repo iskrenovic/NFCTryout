@@ -11,8 +11,10 @@ import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 
 import java.util.Collection;
 
-public class WifiManager implements WifiBroadcastReceiver.Callback{
+public class WifiManager implements WifiBroadcastReceiver.Callback, SendReceive.Callback{
 
+    private boolean initialisation;
+    private boolean registred;
     private boolean connected;
     private String deviceAdress;
     private Context context;
@@ -23,8 +25,6 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
     private SendReceive sendReceive;
     private MainCallback mainCallback;
     private Callback callback;
-
-    private boolean searchStarted = false;
 
     public WifiManager(Context context, MainCallback mainCallback, Callback callback) {
         this.mainCallback = mainCallback;
@@ -47,13 +47,15 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
         intentFilter.addAction("android.net.wifi.p2p.CONNECTION_STATE_CHANGE");
         intentFilter.addAction("android.net.wifi.p2p.THIS_DEVICE_CHANGED");
         context.registerReceiver(receiver, intentFilter);
+        registred = true;
+        searchForPeers();
     }
 
-    /*private void searchForPeers(){
+    private void searchForPeers(){
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                searchStarted = true;
+
             }
 
             @Override
@@ -61,34 +63,57 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
 
             }
         });
-    }*/
+    }
 
-    public void connect(String deviceAddress) {
-        /*searchForPeers();
-        if(searchStarted) {*/
-            WifiP2pConfig config = new WifiP2pConfig();
-            config.deviceAddress = deviceAddress;
-            manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+    public void disconnect(){
+        if(connected) {
+            manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {
-                    WifiManager.this.connected = true;
-                    WifiManager.this.callback.onInvitationSend(true);
+
                 }
 
                 @Override
-                public void onFailure(int i) {
-                    WifiManager.this.callback.onInvitationSend(false);
+                public void onFailure(int reason) {
+
                 }
             });
         }
-    /*}*/
+    }
+
+    public boolean isRegistred() {
+        return registred;
+    }
+
+    public void setRegistred(boolean registred){
+        this.registred = registred;
+    }
+
+    public void connect(String deviceAddress) {
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = deviceAddress;
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                initialisation = true;
+                connected = true;
+                WifiManager.this.callback.onInvitationSend(true);
+            }
+
+            @Override
+            public void onFailure(int i) {
+                WifiManager.this.callback.onInvitationSend(false);
+            }
+        });
+    }
+
+    public void unregisterReceiver(){
+        context.unregisterReceiver(receiver);
+    }
 
     public String getDeviceAdress(){
         return deviceAdress;
-    }
-
-    public void sendMessage(String message) {
-        sendReceive.write(message.getBytes());
     }
 
     @Override
@@ -107,13 +132,10 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
     }
 
     @Override
-    public void onMessageReceived(String message) {
-        mainCallback.getUser().set(message);
-    }
-
-    @Override
     public void onSendReceiveReady(SendReceive sendReceive) {
         this.sendReceive = sendReceive;
+        sendReceive.setCallback(this);
+        this.sendReceive.write(mainCallback.getUser().read().getBytes());
     }
 
     @Override
@@ -122,11 +144,18 @@ public class WifiManager implements WifiBroadcastReceiver.Callback{
     }
 
     @Override
-    public void onReceived(String deviceAdress) {
+    public void onReceiveNFC(String deviceAdress) {
         this.deviceAdress = deviceAdress;
+    }
+
+    @Override
+    public void onReceiveWIFI(String info) {
+        callback.onUserReceived(info);
+        initialisation = false;
     }
 
     public interface Callback{
         void onInvitationSend(boolean sent);
+        void onUserReceived(String info);
     }
 }
