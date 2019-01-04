@@ -183,7 +183,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
     @Override
     public void nextEmailFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(4))).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(4)).commitAllowingStateLoss();
     }
 
     @Override
@@ -195,7 +195,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
     @Override
     public void nextContact() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(3))).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(3)).commitAllowingStateLoss();
     }
 
     @Override
@@ -206,7 +206,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     @Override
     public void nextShare(boolean[] mediaToShare) {
         this.mediaToShare = mediaToShare;
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getFragment(getNextMediaIndex(0))).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(0)).commitAllowingStateLoss();
     }
 
     @Override
