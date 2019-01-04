@@ -72,6 +72,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btFacebook" />
 
+        <ImageButton
+            android:id="@+id/btWhatsApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@{vm.whatsApp ? vm.btOn : vm.btOff}"
+            android:onClick="@{()->vm.whatsAppClick()}"
+            android:padding="25dp"
+            android:src="@{vm.whatsApp ? vm.srcWhatsAppOn : vm.srcWhatsAppOff}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btFacebook" />
+
         <ImageView
             android:id="@+id/btNext"
             android:layout_width="wrap_content"

@@ -32,6 +32,10 @@ public class ShareViewModel extends ViewModel {
     private MutableLiveData<Drawable> srcEmailOff;
     private MutableLiveData<Boolean> email;
 
+    private MutableLiveData<Drawable> srcWhatsAppOn;
+    private MutableLiveData<Drawable> srcWhatsAppOff;
+    private MutableLiveData<Boolean> whatsApp;
+
     public ShareViewModel(){
 
         btOn = new MutableLiveData<>();
@@ -56,6 +60,11 @@ public class ShareViewModel extends ViewModel {
         srcEmailOff = new MutableLiveData<>();
         email = new MutableLiveData<>();
         email.setValue(false);
+
+        srcWhatsAppOn = new MutableLiveData<>();
+        srcWhatsAppOff = new MutableLiveData<>();
+        whatsApp = new MutableLiveData<>();
+        whatsApp.setValue(false);
     }
 
     public LiveData<Drawable> getBtOn(){
@@ -124,6 +133,20 @@ public class ShareViewModel extends ViewModel {
         return email;
     }
 
+    /*WhatsApp*/
+
+    public LiveData<Drawable> getSrcWhatsAppOn() {
+        return srcEmailOn;
+    }
+
+    public LiveData<Drawable> getSrcWhatsAppOff() {
+        return srcEmailOff;
+    }
+
+    public LiveData<Boolean> getWhatsApp() {
+        return email;
+    }
+
     public void setFragment(ShareFragment fragment) {
         this.fragment = fragment;
         callback = fragment;
@@ -146,6 +169,9 @@ public class ShareViewModel extends ViewModel {
 
         srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_color));
         srcEmailOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
+
+        srcWhatsAppOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_color));
+        srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_white));
     }
 
     public void facebookClick(){
@@ -164,8 +190,10 @@ public class ShareViewModel extends ViewModel {
         email.setValue(!email.getValue());
     }
 
+    public void whatsAppClick(){whatsApp.setValue(!whatsApp.getValue());}
+
     public void next(){
-        boolean[] mediaToShare = {facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue()};
+        boolean[] mediaToShare = {facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue()};
         callback.proceed(mediaToShare);
 
     }

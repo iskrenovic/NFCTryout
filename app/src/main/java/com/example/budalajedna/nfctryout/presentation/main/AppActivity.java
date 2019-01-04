@@ -8,7 +8,6 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
@@ -42,9 +41,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private AllDoneFragment allDoneFragment;
 
     private boolean[] mediaToShare;
-    private final int mediaNumber = 4;
+    private final int mediaNumber = 5;
     private Animation animation;
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +54,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         wifiManager = new WifiManager(this, this,this);
 
         readWriteClient = new ReadWriteClient(this);
-
-        textView = findViewById(R.id.textView);
 
         shareFragment = new ShareFragment();
         shareFragment.setCallback(this);
@@ -75,7 +71,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         allDoneFragment.setCallbacks(this, this);
 
         user = new User();
-        sharedUser = new SharedUser(this);
+        sharedUser = new SharedUser(this, this);
 
         String userInfo = readWriteClient.read();
 
@@ -134,12 +130,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    private int getNextMediaIndex(int startIndex){
+    private Fragment getNextMediaIndex(int startIndex){
         for (int i = startIndex; i < mediaNumber; i++) {
-            if(mediaToShare[i]) return i;
+            if(mediaToShare[i]) if(getFragment(i)!=null) return getFragment(i);
         }
         if(startIndex == 0) toastMaker("VEC STE UBACILI OVE INFORMACIJE");
-        return -1;
+        return null;
     }
     //Za sad ovako slepacki izgleda, jbg. Kad se napravi Facebook i Insta bice bolje :)
     private Fragment getFragment(int index){
@@ -147,7 +143,17 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             case 2:
                 return inputPhoneNumberFragment;
             case 3:
+                if(user.getEmail().equals(""))
                 return inputEmailFragment;
+                else return null;
+
+            case 4:
+                if(user.getPhoneNumber().equals(""))
+                    return inputEmailFragment;
+                else{
+                    readWriteClient.save(user.read());
+                    return allDoneFragment;
+                }
             default:
                 readWriteClient.save(user.read());
                 return allDoneFragment;
