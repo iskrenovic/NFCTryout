@@ -2,17 +2,23 @@ package com.example.budalajedna.nfctryout.presentation.main;
 
 import android.content.ContentProviderOperation;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
+import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
@@ -21,24 +27,32 @@ import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback {
+        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,Facebook.FacebookCallback {
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
-
     private ReadWriteClient readWriteClient;
     private User user;
     private SharedUser sharedUser;
+
+    private Facebook facebook;
+    private CallbackManager callbackManager;
 
     private HelloFragment helloFragment;
     private ShareFragment shareFragment;
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
     private AllDoneFragment allDoneFragment;
+
 
     private boolean[] mediaToShare;
     private final int mediaNumber = 5;
@@ -49,6 +63,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.app_activity);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        callbackManager=CallbackManager.Factory.create();
 
         nfcManager = new NFCManager(this);
         wifiManager = new WifiManager(this, this,this);
@@ -82,6 +100,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
             shareFragment.setButtonStates(user.set(userInfo));
         }
+
+        facebook=new Facebook(this,this);
+
+
     }
 
     @Override
@@ -210,6 +232,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     }
 
     @Override
+    public void setAccesToken(AccessToken accesToken) {
+        facebook.setUserId(accesToken);
+    }
+
+
+    @Override
     public void addContact(ArrayList<ContentProviderOperation> operations) {
         try{
             this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
@@ -233,5 +261,22 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     @Override
     public void onUserReceived(String info) {
         sharedUser.save(info);
+    }
+
+    @Override
+    public void openAccount(Intent intent) {
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+                Log.d("Activity", "ON RESULT CALLED");
+            }
+        } catch (Exception e) {
+            Log.d("ERROR", e.toString());
+        }
     }
 }

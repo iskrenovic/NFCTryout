@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.example.budalajedna.nfctryout.R;
+import com.facebook.login.widget.LoginButton;
 
 
 public class ShareViewModel extends ViewModel {
@@ -197,8 +199,10 @@ public class ShareViewModel extends ViewModel {
         callback.proceed(mediaToShare);
 
     }
+
     public interface Callback{
         void proceed(boolean[] mediaToShare);
     }
+
 
 }
