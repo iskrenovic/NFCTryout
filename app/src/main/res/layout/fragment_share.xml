@@ -51,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:padding="25dp"
             android:background="@{vm.contact ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.contactClick()}"
+            android:padding="25dp"
             android:src="@{vm.contact ? vm.srcContactOn : vm.srcContactOff}"
             app:layout_constraintEnd_toEndOf="parent"
 
@@ -108,6 +108,19 @@
             app:layout_constraintStart_toEndOf="@+id/btWhatsApp"
             app:layout_constraintTop_toBottomOf="@+id/btInstagram" />
 
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/twitter_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/tw__composer_logo_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

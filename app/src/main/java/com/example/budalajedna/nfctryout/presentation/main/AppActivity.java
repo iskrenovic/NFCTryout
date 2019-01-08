@@ -2,15 +2,11 @@ package com.example.budalajedna.nfctryout.presentation.main;
 
 import android.content.ContentProviderOperation;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.Toast;
@@ -21,6 +17,7 @@ import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
+import com.example.budalajedna.nfctryout.datahandling.TwitterUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
@@ -32,11 +29,10 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
-
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,Facebook.FacebookCallback {
+        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,Facebook.FacebookCallback, TwitterUser.TwitterMainCallback {
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
@@ -45,6 +41,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private SharedUser sharedUser;
 
     private Facebook facebook;
+    private TwitterUser twitterUser;
     private CallbackManager callbackManager;
 
     private HelloFragment helloFragment;
@@ -102,7 +99,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         }
 
         facebook=new Facebook(this,this);
-
+        twitterUser=new TwitterUser(this);
 
     }
 
@@ -236,6 +233,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         facebook.setUserId(accesToken);
     }
 
+    @Override
+    public void setTwitterUserID(String userID) {
+        twitterUser.setUserID(userID);
+    }
+
 
     @Override
     public void addContact(ArrayList<ContentProviderOperation> operations) {
@@ -278,5 +280,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         } catch (Exception e) {
             Log.d("ERROR", e.toString());
         }
+    }
+
+    @Override
+    public void openTwitterAccount(Intent intent) {
+        startActivity(intent);
     }
 }

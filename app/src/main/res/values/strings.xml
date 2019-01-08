@@ -2,4 +2,6 @@
     <string name="app_name">NFCTryout</string>
     <string name="facebook_app_id">1835893109871839</string>
     <string name="fb_login_protocol_scheme">fb1835893109871839</string>
+    <string name="consumer_key">MA1y8vaDjEp0bKRkZNRfh9et6</string>
+    <string name="secret_key">WypkLYxzipFGE0qSuBRu8W96pSpxF4JeVpYdqwzQbQ4ZnwrrUT</string>
 </resources>

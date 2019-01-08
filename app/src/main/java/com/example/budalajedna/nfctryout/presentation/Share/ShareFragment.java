@@ -23,13 +23,22 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
-import java.util.Arrays;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     private FragmentShareBinding binding;
     private ShareViewModel shareViewModel;
+
+
+    private TwitterLoginButton twitterLoginButton;
 
     private CallbackManager callbackManager;
     private static final String EMAIL = "email";
@@ -47,6 +56,19 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
         FacebookSdk.sdkInitialize(getActivity());
         callbackManager = CallbackManager.Factory.create();
+
+        TwitterConfig config = new TwitterConfig.Builder(getActivity())
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(getResources().getString(R.string.consumer_key), getResources().getString(R.string.secret_key
+                )))
+                .debug(true)
+                .build();
+
+        Twitter.initialize(config);
+
+
+
+
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_share,container,false);
 
@@ -84,12 +106,21 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
         });
 
 
+
+
+        twitterLoginButton = (TwitterLoginButton) view.findViewById(R.id.twitter_login);
+        twitterLoginButton.setCallback(new com.twitter.sdk.android.core.Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                callback.setTwitterUserID(result.data.getUserId()+"");
+            }
+            @Override
+            public void failure(TwitterException exception) {
+
+            }
+        });
+
         return view;
-
-
-
-
-
     }
 
     public void setCallback(Callback callback) {
@@ -128,15 +159,20 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         Log.d("FRAGMENT", "onResultCalled");
     }
 
 
 
+
+
     public interface Callback{
         void nextShare(boolean[] mediaToShare);
         void setAccesToken(AccessToken accesToken);
+        void setTwitterUserID(String userName);
 
     }
+
 }

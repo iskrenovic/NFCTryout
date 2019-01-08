@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaCas;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.appevents.AppEventsLogger;
 
 import org.json.JSONObject;
 
