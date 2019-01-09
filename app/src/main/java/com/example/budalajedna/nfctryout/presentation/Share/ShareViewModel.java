@@ -4,10 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.example.budalajedna.nfctryout.R;
-import com.facebook.login.widget.LoginButton;
 
 
 public class ShareViewModel extends ViewModel {
@@ -34,15 +32,19 @@ public class ShareViewModel extends ViewModel {
     private MutableLiveData<Drawable> srcEmailOff;
     private MutableLiveData<Boolean> email;
 
+    private MutableLiveData<Drawable> srcTwitterOn;
+    private MutableLiveData<Drawable> srcTwitterOff;
+    private MutableLiveData<Boolean> twitter;
+
     private MutableLiveData<Drawable> srcWhatsAppOn;
     private MutableLiveData<Drawable> srcWhatsAppOff;
     private MutableLiveData<Boolean> whatsApp;
 
-    public ShareViewModel(){
+    public ShareViewModel() {
 
         btOn = new MutableLiveData<>();
         btOff = new MutableLiveData<>();
-        
+
         srcFacebookOn = new MutableLiveData<>();
         srcFacebookOff = new MutableLiveData<>();
         facebook = new MutableLiveData<>();
@@ -62,6 +64,11 @@ public class ShareViewModel extends ViewModel {
         srcEmailOff = new MutableLiveData<>();
         email = new MutableLiveData<>();
         email.setValue(false);
+
+        srcTwitterOn = new MutableLiveData<>();
+        srcTwitterOff = new MutableLiveData<>();
+        twitter = new MutableLiveData<>();
+        twitter.setValue(false);
 
         srcWhatsAppOn = new MutableLiveData<>();
         srcWhatsAppOff = new MutableLiveData<>();
@@ -135,6 +142,22 @@ public class ShareViewModel extends ViewModel {
         return email;
     }
 
+    /*TWITTER*/
+
+    public LiveData<Drawable> getSrcTwitterOn() {
+        return srcEmailOn;
+    }
+
+    public LiveData<Drawable> getSrcTwitterOff() {
+        return srcEmailOff;
+    }
+
+    public LiveData<Boolean> getTwitter() {
+        return email;
+    }
+
+
+
     /*WhatsApp*/
 
     public LiveData<Drawable> getSrcWhatsAppOn() {
@@ -172,36 +195,50 @@ public class ShareViewModel extends ViewModel {
         srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_color));
         srcEmailOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
 
+        srcTwitterOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_twitterlogo_color));
+        srcTwitterOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_twitterlogo_white));
+
         srcWhatsAppOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_color));
         srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_white));
     }
 
-    public void facebookClick(){
-        facebook.setValue(!facebook.getValue());
-    }
+    public void facebookClick(){facebook.setValue(!facebook.getValue()); }
 
     public void instagramClick(){
         instagram.setValue(!instagram.getValue());
     }
 
     public void contactClick(){
+
         contact.setValue(!contact.getValue());
+        callback.phoneClick();
     }
 
     public void emailClick(){
         email.setValue(!email.getValue());
+        callback.emailClick();
+    }
+
+    public void twitterClick(){
+        twitter.setValue(!twitter.getValue());
+        callback.twitterClick();
     }
 
     public void whatsAppClick(){whatsApp.setValue(!whatsApp.getValue());}
 
-    public void next(){
-        boolean[] mediaToShare = {facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue()};
-        callback.proceed(mediaToShare);
+    public boolean[] getMediaToShare(){
+        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue()};
+    }
 
+    public void next(){
+        callback.proceed(getMediaToShare());
     }
 
     public interface Callback{
         void proceed(boolean[] mediaToShare);
+        void phoneClick();
+        void emailClick();
+        void twitterClick();
     }
 
 

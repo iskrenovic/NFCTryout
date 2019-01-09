@@ -47,10 +47,10 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
     @Override
     public void nextFragment(String phoneNumber) {
         mainCallback.getUser().setPhoneNumber(phoneNumber);
-        callback.nextContact();
+        callback.nextFragment(3);
     }
 
     public interface Callback{
-        void nextContact();
+        void nextFragment(int startIndex);
     }
 }

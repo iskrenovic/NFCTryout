@@ -15,40 +15,22 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
+import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 import com.example.budalajedna.nfctryout.presentation.main.MediaType;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     private FragmentShareBinding binding;
     private ShareViewModel shareViewModel;
 
-
-    private TwitterLoginButton twitterLoginButton;
-
     private CallbackManager callbackManager;
-    private static final String EMAIL = "email";
-
+    private MainCallback mainCallback;
     private Callback callback;
 
     private boolean[] buttonStates;
-
-
-
 
     @Nullable
     @Override
@@ -56,18 +38,6 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
         FacebookSdk.sdkInitialize(getActivity());
         callbackManager = CallbackManager.Factory.create();
-
-        TwitterConfig config = new TwitterConfig.Builder(getActivity())
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(getResources().getString(R.string.consumer_key), getResources().getString(R.string.secret_key
-                )))
-                .debug(true)
-                .build();
-
-        Twitter.initialize(config);
-
-
-
 
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_share,container,false);
@@ -84,47 +54,11 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
         if(buttonStates!=null) setButtonClicked();
 
-
-
-        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
-
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                callback.setAccesToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
-
-
-
-
-        twitterLoginButton = (TwitterLoginButton) view.findViewById(R.id.twitter_login);
-        twitterLoginButton.setCallback(new com.twitter.sdk.android.core.Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                callback.setTwitterUserID(result.data.getUserId()+"");
-            }
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        });
-
         return view;
     }
 
-    public void setCallback(Callback callback) {
-
+    public void setCallback(Callback callback, MainCallback mainCallback) {
+        this.mainCallback = mainCallback;
         this.callback = callback;
     }
 
@@ -135,6 +69,7 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     public void setButtonClicked(){
         if(buttonStates[MediaType.phoneNumber.getValue()]) shareViewModel.contactClick();
         if(buttonStates[MediaType.email.getValue()]) shareViewModel.emailClick();
+
     }
 
     private boolean hasChanged(boolean[] mediaToShare){
@@ -157,22 +92,26 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     }
 
     @Override
+    public void phoneClick() {
+        mainCallback.getUser().clickPhone();
+    }
+
+    @Override
+    public void emailClick() {
+        mainCallback.getUser().clickEmail();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         Log.d("FRAGMENT", "onResultCalled");
     }
 
 
-
-
-
     public interface Callback{
         void nextShare(boolean[] mediaToShare);
         void setAccesToken(AccessToken accesToken);
-        void setTwitterUserID(String userName);
-
     }
 
 }

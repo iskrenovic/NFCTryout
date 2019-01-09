@@ -5,7 +5,8 @@ public enum MediaType {
     facebook (0),
     instagram (1),
     phoneNumber (2),
-    email(3);
+    email(3),
+    twitter(4);
 
     final int value;
 

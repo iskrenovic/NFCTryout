@@ -49,10 +49,10 @@ public class InputEmailFragment extends Fragment implements InputEmailViewModel.
     @Override
     public void nextFragment(String email) {
         userCallback.getUser().setEmail(email);
-        callback.nextEmailFragment();
+        callback.nextFragment(4);
 
     }
     public interface callback{
-        void nextEmailFragment();
+        void nextFragment(int startIndex);
     }
 }

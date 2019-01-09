@@ -135,7 +135,7 @@ public class WifiManager implements WifiBroadcastReceiver.Callback, SendReceive.
     public void onSendReceiveReady(SendReceive sendReceive) {
         this.sendReceive = sendReceive;
         sendReceive.setCallback(this);
-        this.sendReceive.write(mainCallback.getUser().read().getBytes());
+        this.sendReceive.write(mainCallback.getUser().send().getBytes());
     }
 
     @Override

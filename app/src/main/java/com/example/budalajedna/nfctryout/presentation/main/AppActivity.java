@@ -17,11 +17,12 @@ import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
-import com.example.budalajedna.nfctryout.datahandling.TwitterUser;
+import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.facebook.AccessToken;
@@ -32,7 +33,8 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,Facebook.FacebookCallback, TwitterUser.TwitterMainCallback {
+        InputPhoneNumberFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,
+        Facebook.FacebookCallback {
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
@@ -41,15 +43,15 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private SharedUser sharedUser;
 
     private Facebook facebook;
-    private TwitterUser twitterUser;
+
     private CallbackManager callbackManager;
 
     private HelloFragment helloFragment;
     private ShareFragment shareFragment;
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
+    private InputTwitterFragment inputTwitterFragment;
     private AllDoneFragment allDoneFragment;
-
 
     private boolean[] mediaToShare;
     private final int mediaNumber = 5;
@@ -71,7 +73,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         readWriteClient = new ReadWriteClient(this);
 
         shareFragment = new ShareFragment();
-        shareFragment.setCallback(this);
+        shareFragment.setCallback(this, this);
 
         helloFragment = new HelloFragment();
         helloFragment.setCallbacks(this, this);
@@ -81,6 +83,9 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
         inputEmailFragment = new InputEmailFragment();
         inputEmailFragment.setCallbacks(this,this);
+
+        inputTwitterFragment = new InputTwitterFragment();
+        inputTwitterFragment.setCallback(this);
 
         allDoneFragment = new AllDoneFragment();
         allDoneFragment.setCallbacks(this, this);
@@ -98,8 +103,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
             shareFragment.setButtonStates(user.set(userInfo));
         }
 
-        facebook=new Facebook(this,this);
-        twitterUser=new TwitterUser(this);
+        facebook = new Facebook(this,this);
 
     }
 
@@ -156,18 +160,22 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         if(startIndex == 0) toastMaker("VEC STE UBACILI OVE INFORMACIJE");
         return null;
     }
-    //Za sad ovako slepacki izgleda, jbg. Kad se napravi Facebook i Insta bice bolje :)
     private Fragment getFragment(int index){
         switch (index){
             case 2:
-                return inputPhoneNumberFragment;
+                return inputPhoneNumberFragment; //PHONE NUMBER
             case 3:
-                if(user.getEmail().equals(""))
-                return inputEmailFragment;
+                if(user.getEmail().equals(""))  //EMAIL
+                    return inputEmailFragment;
                 else return null;
 
             case 4:
-                if(user.getPhoneNumber().equals(""))
+                if(user.getTwitterId().equals("")) //TWITTER
+                    return inputTwitterFragment;
+                else return null;
+
+            case 5:
+                if(user.getPhoneNumber().equals("")) //WHATSAPP
                     return inputEmailFragment;
                 else{
                     readWriteClient.save(user.read());
@@ -201,20 +209,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     }
 
     @Override
-    public void nextEmailFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(4)).commitAllowingStateLoss();
-    }
-
-    @Override
     public void nextAllDone() {
         readWriteClient.save(user.read());
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
         shareFragment.setButtonStates(user.getKnown());
-    }
-
-    @Override
-    public void nextContact() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(3)).commitAllowingStateLoss();
     }
 
     @Override
@@ -235,7 +233,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
     @Override
     public void setTwitterUserID(String userID) {
-        twitterUser.setUserID(userID);
+        user.setTwitterId(userID);
+    }
+
+    @Override
+    public void nextFragment(int startIndex) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(startIndex)).commitAllowingStateLoss();
     }
 
 
@@ -247,7 +250,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         catch (Exception e){
             toastMaker(e.toString());
         }
-
     }
 
     @Override
