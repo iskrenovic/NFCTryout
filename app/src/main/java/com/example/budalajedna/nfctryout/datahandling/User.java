@@ -18,7 +18,11 @@ public class User {
     private String twitterId = "";
     private boolean sTwitter = false;
 
+    Callback callback;
 
+    public User(Callback callback){
+        this.callback = callback;
+    }
 
     public String read(){
 
@@ -56,6 +60,7 @@ public class User {
         try {
             JSONObject object = new JSONObject(info);
             contactName = object.getString("contactName");
+            callback.getUserName(contactName);
             phoneNumber = object.getString("phoneNumber");
             sPhone = object.getBoolean("sPhone");
             email = object.getString("email");
@@ -116,4 +121,8 @@ public class User {
     }
 
     public void setFacebookId(String facebookId) {this.facebookId = facebookId;}
+
+    public interface Callback{
+        void getUserName(String name);
+    }
 }

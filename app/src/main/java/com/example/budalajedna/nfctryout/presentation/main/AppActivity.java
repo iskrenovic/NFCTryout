@@ -33,9 +33,11 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
 
-public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
+public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
         InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,
         Facebook.FacebookCallback {
+
+    private MainViewModel mainViewModel;
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
@@ -67,6 +69,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
         setContentView(R.layout.app_activity);
 
+        mainViewModel = new MainViewModel();
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         callbackManager=CallbackManager.Factory.create();
@@ -97,12 +101,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         allDoneFragment = new AllDoneFragment();
         allDoneFragment.setCallbacks(this, this);
 
-        user = new User();
+        user = new User(this);
         sharedUser = new SharedUser(this, this);
 
         String userInfo = readWriteClient.read();
 
         if(userInfo.equals("")){
+            mainViewModel.setText("Dobrodoso u Handshake");
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.helloFragment).commitAllowingStateLoss();
         }
         else{
@@ -111,7 +116,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         }
 
         facebook = new Facebook(this,this);
-
     }
 
     @Override
@@ -184,11 +188,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
             case 4:
                 if(user.getPhoneNumber().equals("")) //WHATSAPP
-                    return inputEmailFragment;
-                else{
-                    readWriteClient.save(user.read());
-                    return allDoneFragment;
-                }
+                    return inputPhoneNumberFragment;
+                else return null;
 
             case 5:
                 if(user.getTwitterId().equals("")) { //TWITTER
@@ -305,5 +306,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     @Override
     public void openTwitterAccount(Intent intent) {
         startActivity(intent);
+    }
+
+    @Override
+    public void getUserName(String name) {
+        mainViewModel.setText(name +", sta zelis da delis?");
     }
 }
