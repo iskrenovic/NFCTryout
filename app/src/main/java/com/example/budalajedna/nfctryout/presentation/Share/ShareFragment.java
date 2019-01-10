@@ -37,8 +37,6 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
         View view  = this.binding.getRoot();
 
-        int i = 0;
-
         binding.setLifecycleOwner(this);
 
         shareViewModel = ViewModelProviders.of(this).get(ShareViewModel.class);
