@@ -2,11 +2,12 @@ package com.example.budalajedna.nfctryout.presentation.main;
 
 public enum MediaType {
 
-    facebook (0),
-    instagram (1),
-    phoneNumber (2),
-    email(3),
-    twitter(4);
+    facebook (2),
+    instagram (3),
+    phoneNumber (0),
+    email(1),
+    twitter(5),
+    whatsapp(4);
 
     final int value;
 

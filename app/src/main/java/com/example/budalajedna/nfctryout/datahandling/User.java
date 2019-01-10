@@ -12,6 +12,9 @@ public class User {
     private String email = "";
     private boolean sEmail = false;
 
+    private String facebookId = "";
+    private boolean sFacebook = false;
+
     private String twitterId = "";
     private boolean sTwitter = false;
 
@@ -26,6 +29,8 @@ public class User {
             object.put("sPhone", sPhone);
             object.put("email",email);
             object.put("sEmail", sEmail);
+            object.put("facebookId", facebookId);
+            object.put("sFacebook", sFacebook);
             object.put("twitterId", twitterId);
             object.put("sTwitter", sTwitter);
         }
@@ -39,6 +44,7 @@ public class User {
             object.put("contactName", contactName);
             if(sPhone)object.put("phoneNumber", phoneNumber);
             if(sEmail)object.put("email",email);
+            if(sFacebook)object.put("facebookId", facebookId);
             if(sTwitter)object.put("twitterId", twitterId);
         }
         catch (Exception e){}
@@ -77,6 +83,8 @@ public class User {
         return twitterId;
     }
 
+    public String getFacebookId(){return facebookId;}
+
     public void setContactName(String contactName){
         this.contactName = contactName;
     }
@@ -89,6 +97,12 @@ public class User {
        sEmail = !sEmail;
     }
 
+    public void clickTwitter(){
+        sTwitter = !sTwitter;
+    }
+
+    public void clickFacebook(){sFacebook = !sFacebook;}
+
     public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
@@ -100,4 +114,6 @@ public class User {
     public void setTwitterId(String twitterId){
         this.twitterId = twitterId;
     }
+
+    public void setFacebookId(String facebookId) {this.facebookId = facebookId;}
 }

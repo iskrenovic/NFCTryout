@@ -41,7 +41,6 @@ public class Facebook {
     }
 
 
-
     public void setUserId(AccessToken accessToken){
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,

@@ -201,7 +201,10 @@ public class ShareViewModel extends ViewModel {
         srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_white));
     }
 
-    public void facebookClick(){facebook.setValue(!facebook.getValue()); }
+    public void facebookClick(){
+        facebook.setValue(!facebook.getValue());
+        callback.facebookClick();
+    }
 
     public void instagramClick(){
         instagram.setValue(!instagram.getValue());
@@ -237,8 +240,7 @@ public class ShareViewModel extends ViewModel {
         void proceed(boolean[] mediaToShare);
         void phoneClick();
         void emailClick();
+        void facebookClick();
         void twitterClick();
     }
-
-
 }

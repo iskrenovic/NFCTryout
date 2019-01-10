@@ -21,6 +21,7 @@ import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
@@ -33,7 +34,7 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,
+        InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,
         Facebook.FacebookCallback {
 
     private NFCManager nfcManager;
@@ -50,6 +51,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private ShareFragment shareFragment;
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
+    private InputFacebookFragment inputFacebookFragment;
     private InputTwitterFragment inputTwitterFragment;
     private AllDoneFragment allDoneFragment;
 
@@ -59,6 +61,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.app_activity);
@@ -83,6 +87,9 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
 
         inputEmailFragment = new InputEmailFragment();
         inputEmailFragment.setCallbacks(this,this);
+
+        inputFacebookFragment = new InputFacebookFragment();
+        inputFacebookFragment.setCallback(this,this);
 
         inputTwitterFragment = new InputTwitterFragment();
         inputTwitterFragment.setCallback(this);
@@ -161,26 +168,34 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         return null;
     }
     private Fragment getFragment(int index){
-        switch (index){
-            case 2:
-                return inputPhoneNumberFragment; //PHONE NUMBER
-            case 3:
+        switch (index){ //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
+            case 0:
+                if(user.getPhoneNumber().equals("")) //PHONE NUMBER
+                    return inputPhoneNumberFragment;
+                else return null;
+            case 1:
                 if(user.getEmail().equals(""))  //EMAIL
                     return inputEmailFragment;
                 else return null;
-
-            case 4:
-                if(user.getTwitterId().equals("")) //TWITTER
-                    return inputTwitterFragment;
+            case 2:
+                if(user.getFacebookId().equals(""))  //FACEBOOK
+                    return inputFacebookFragment;
                 else return null;
 
-            case 5:
+            case 4:
                 if(user.getPhoneNumber().equals("")) //WHATSAPP
                     return inputEmailFragment;
                 else{
                     readWriteClient.save(user.read());
                     return allDoneFragment;
                 }
+
+            case 5:
+                if(user.getTwitterId().equals("")) //TWITTER
+                    return inputTwitterFragment;
+                else return null;
+
+
             default:
                 readWriteClient.save(user.read());
                 return allDoneFragment;

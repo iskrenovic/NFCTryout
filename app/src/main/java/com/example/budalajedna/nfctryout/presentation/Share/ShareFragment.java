@@ -17,16 +17,13 @@ import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentShareBinding;
 import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 import com.example.budalajedna.nfctryout.presentation.main.MediaType;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 
 public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     private FragmentShareBinding binding;
     private ShareViewModel shareViewModel;
 
-    private CallbackManager callbackManager;
+
     private MainCallback mainCallback;
     private Callback callback;
 
@@ -35,10 +32,6 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        FacebookSdk.sdkInitialize(getActivity());
-        callbackManager = CallbackManager.Factory.create();
-
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_share,container,false);
 
@@ -102,16 +95,25 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     }
 
     @Override
+    public void facebookClick() {
+        mainCallback.getUser().clickFacebook();
+    }
+
+    @Override
+    public void twitterClick() {
+        mainCallback.getUser().clickTwitter();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+
         Log.d("FRAGMENT", "onResultCalled");
     }
 
 
     public interface Callback{
         void nextShare(boolean[] mediaToShare);
-        void setAccesToken(AccessToken accesToken);
     }
 
 }
