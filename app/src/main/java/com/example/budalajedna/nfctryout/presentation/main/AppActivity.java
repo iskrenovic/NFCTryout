@@ -239,6 +239,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
     }
 
+
     @Override
     public void nextShare(boolean[] mediaToShare) {
         this.mediaToShare = mediaToShare;

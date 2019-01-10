@@ -3,16 +3,22 @@ package com.example.budalajedna.nfctryout.presentation.hello;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.Editable;
+
+import com.example.budalajedna.nfctryout.R;
 
 public class HelloViewModel extends ViewModel {
 
-    Callback callback;
+    private Callback callback;
 
-    MutableLiveData<String> name;
+    private MutableLiveData<String> name;
+    private MutableLiveData<Drawable> picture;
 
     public HelloViewModel(){
         name = new MutableLiveData<>();
+        picture = new MutableLiveData<>();
     }
 
     public void setCallback(Callback callback){
@@ -34,11 +40,24 @@ public class HelloViewModel extends ViewModel {
         return name;
     }
 
+    public LiveData<Drawable> getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Drawable picture) {
+        this.picture.setValue(picture);
+    }
+
+    public void selectProfilePicture(){
+        callback.getProfilePicture();
+    }
+
     public void nextStep(){
         callback.nextStep(name.getValue());
     }
 
     public interface Callback{
         void nextStep(String contactName);
+        void getProfilePicture();
     }
 }
