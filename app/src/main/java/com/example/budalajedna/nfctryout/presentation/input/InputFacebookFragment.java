@@ -34,7 +34,7 @@ public class InputFacebookFragment extends Fragment{
         FacebookSdk.sdkInitialize(mainCallback.getActivity());
         callbackManager = CallbackManager.Factory.create();
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_iemail,container,false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_facebook,container,false);
 
         View view = this.binding.getRoot();
 

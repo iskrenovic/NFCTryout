@@ -144,15 +144,15 @@ public class ShareViewModel extends ViewModel {
     /*TWITTER*/
 
     public LiveData<Drawable> getSrcTwitterOn() {
-        return srcEmailOn;
+        return srcTwitterOn;
     }
 
     public LiveData<Drawable> getSrcTwitterOff() {
-        return srcEmailOff;
+        return srcTwitterOff;
     }
 
     public LiveData<Boolean> getTwitter() {
-        return email;
+        return twitter;
     }
 
 
@@ -160,15 +160,15 @@ public class ShareViewModel extends ViewModel {
     /*WhatsApp*/
 
     public LiveData<Drawable> getSrcWhatsAppOn() {
-        return srcEmailOn;
+        return srcWhatsAppOn;
     }
 
     public LiveData<Drawable> getSrcWhatsAppOff() {
-        return srcEmailOff;
+        return srcWhatsAppOff;
     }
 
     public LiveData<Boolean> getWhatsApp() {
-        return email;
+        return whatsApp;
     }
 
     public void setFragment(ShareFragment fragment) {
@@ -229,7 +229,7 @@ public class ShareViewModel extends ViewModel {
     public void whatsAppClick(){whatsApp.setValue(!whatsApp.getValue());}
 
     public boolean[] getMediaToShare(){
-        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue()};
+        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue(), twitter.getValue()};
     }
 
     public void next(){

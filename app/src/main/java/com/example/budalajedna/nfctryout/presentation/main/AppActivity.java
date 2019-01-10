@@ -17,7 +17,6 @@ import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
-import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
@@ -30,6 +29,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
 
@@ -56,7 +56,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     private AllDoneFragment allDoneFragment;
 
     private boolean[] mediaToShare;
-    private final int mediaNumber = 5;
+    private final int mediaNumber = 6;
     private Animation animation;
 
     @Override
@@ -191,8 +191,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
                 }
 
             case 5:
-                if(user.getTwitterId().equals("")) //TWITTER
+                if(user.getTwitterId().equals("")) { //TWITTER
+
+
                     return inputTwitterFragment;
+                }
                 else return null;
 
 

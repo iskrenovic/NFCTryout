@@ -75,6 +75,7 @@
             android:id="@+id/btTwitter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:background="@{vm.twitter ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.twitterClick()}"

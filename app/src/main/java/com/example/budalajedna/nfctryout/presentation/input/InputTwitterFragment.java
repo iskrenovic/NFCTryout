@@ -1,6 +1,7 @@
 package com.example.budalajedna.nfctryout.presentation.input;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,19 +21,23 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class InputTwitterFragment extends Fragment {
 
-    FragmentItwitterBinding binding;
-    InputTwiterViewModel viewModel;
+    private FragmentItwitterBinding binding;
+    private InputTwiterViewModel viewModel;
 
-    Callback callback;
+    private TwitterLoginButton twitterLoginButton;
+
+    private Callback callback;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_iemail,container,false);
+        prepareTwitter();
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_itwitter,container,false);
 
         View view = this.binding.getRoot();
 
@@ -42,7 +47,7 @@ public class InputTwitterFragment extends Fragment {
 
         binding.setVm(this.viewModel);
 
-        runTwitter();
+        prepareTwitterButton((TwitterLoginButton) view.findViewById(R.id.twitter_login));
 
         return view;
     }
@@ -51,7 +56,7 @@ public class InputTwitterFragment extends Fragment {
         this.callback = callback;
     }
 
-    private void runTwitter(){
+    private void prepareTwitter(){
 
         TwitterConfig config = new TwitterConfig.Builder(getActivity())
                 .logger(new DefaultLogger(Log.DEBUG))
@@ -61,19 +66,30 @@ public class InputTwitterFragment extends Fragment {
                 .build();
 
         Twitter.initialize(config);
+    }
 
-        new com.twitter.sdk.android.core.Callback<TwitterSession>() {
+    private void prepareTwitterButton(TwitterLoginButton loginButton){
+
+        twitterLoginButton = loginButton;
+
+        twitterLoginButton.setCallback(new com.twitter.sdk.android.core.Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 callback.setTwitterUserID(result.data.getUserId() + "");
+                callback.nextFragment(5);
             }
 
             @Override
             public void failure(TwitterException exception) {
 
             }
-        };
-        callback.nextFragment(5);
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
     }
 
     public interface Callback{
