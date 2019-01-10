@@ -43,8 +43,6 @@ public class Facebook {
 
 
     public void setUserId(AccessToken accessToken){
-
-
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -59,8 +57,6 @@ public class Facebook {
         parameters.putString("fields", "id");
         request.setParameters(parameters);
         request.executeAsync();
-
-
 
     }
     public String getUserId(){

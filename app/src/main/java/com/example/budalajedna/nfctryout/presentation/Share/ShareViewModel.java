@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 
 import com.example.budalajedna.nfctryout.R;
 
-
 public class ShareViewModel extends ViewModel {
 
     private ShareFragment fragment;
