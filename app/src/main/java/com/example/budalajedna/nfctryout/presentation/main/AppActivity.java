@@ -24,6 +24,7 @@ import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragmen
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
+import com.example.budalajedna.nfctryout.presentation.share.NewShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -50,7 +51,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private CallbackManager callbackManager;
 
     private HelloFragment helloFragment;
+
     private ShareFragment shareFragment;
+    private NewShareFragment newShareFragment;
+
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
     private InputFacebookFragment inputFacebookFragment;
@@ -83,6 +87,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         shareFragment = new ShareFragment();
         shareFragment.setCallback(this, this);
 
+        newShareFragment = new NewShareFragment();
+
         helloFragment = new HelloFragment();
         helloFragment.setCallbacks(this, this);
 
@@ -106,14 +112,16 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         String userInfo = readWriteClient.read();
 
-        if(userInfo.equals("")){
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.newShareFragment).commitAllowingStateLoss();
+
+        /*if(userInfo.equals("")){
             mainViewModel.setText("Dobrodoso u Handshake");
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.helloFragment).commitAllowingStateLoss();
         }
         else{
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
             shareFragment.setButtonStates(user.set(userInfo));
-        }
+        }*/
 
         facebook = new Facebook(this,this);
     }
