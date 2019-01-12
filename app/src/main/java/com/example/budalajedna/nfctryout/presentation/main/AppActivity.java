@@ -17,7 +17,9 @@ import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
+import com.example.budalajedna.nfctryout.datahandling.Skype;
 import com.example.budalajedna.nfctryout.datahandling.User;
+import com.example.budalajedna.nfctryout.datahandling.Viber;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
@@ -111,6 +113,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
         }
 
         facebook = new Facebook(this,this);
+        Skype skype=new Skype(this);
+        skype.sendSkypeMessage("neca.nemanja.n");
 
     }
 
@@ -306,4 +310,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,Hello
     public void openTwitterAccount(Intent intent) {
         startActivity(intent);
     }
+
+
 }
