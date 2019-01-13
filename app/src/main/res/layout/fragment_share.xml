@@ -19,82 +19,114 @@
             android:id="@+id/btPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
-            android:layout_marginStart="117dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:background="@{vm.contact ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.contactClick()}"
             android:padding="25dp"
             android:src="@{vm.contact ? vm.srcContactOn : vm.srcContactOff}"
-            app:layout_constraintEnd_toStartOf="@+id/btEmail"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="249dp" />
+            app:layout_constraintBottom_toTopOf="@+id/btWhatsApp"
+            app:layout_constraintEnd_toStartOf="@+id/btWhatsApp"
+            app:layout_constraintStart_toEndOf="@+id/btInstagram" />
 
 
         <ImageButton
             android:id="@+id/btInstagram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@{vm.instagram ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.instagramClick()}"
             android:padding="25dp"
             android:src="@{vm.instagram ? vm.srcInstagramOn : vm.srcInstagramOff}"
-            app:layout_constraintTop_toBottomOf="@+id/btPhone"
-            tools:layout_editor_absoluteX="16dp" />
+            app:layout_constraintBottom_toBottomOf="@+id/btWhatsApp"
+            app:layout_constraintEnd_toStartOf="@+id/btWhatsApp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btWhatsApp" />
 
         <ImageButton
             android:id="@+id/btFacebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:background="@{vm.facebook ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.facebookClick()}"
             android:padding="25dp"
             android:src="@{vm.facebook ? vm.srcFacebookOn : vm.srcFacebookOff}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/btWhatsApp"
+            app:layout_constraintStart_toEndOf="@+id/btInstagram"
+            app:layout_constraintTop_toBottomOf="@+id/btWhatsApp" />
 
 
         <ImageButton
             android:id="@+id/btEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="117dp"
-            android:layout_marginTop="249dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:background="@{vm.email ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.emailClick()}"
             android:padding="25dp"
             android:src="@{vm.email ? vm.srcEmailOn : vm.srcEmailOff}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/btWhatsApp"
+            app:layout_constraintEnd_toStartOf="@+id/btTwitter"
+            app:layout_constraintStart_toEndOf="@+id/btWhatsApp" />
 
         <ImageButton
             android:id="@+id/btTwitter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             android:background="@{vm.twitter ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.twitterClick()}"
             android:padding="25dp"
             android:src="@{vm.twitter ? vm.srcTwitterOn : vm.srcTwitterOff}"
+            app:layout_constraintBottom_toBottomOf="@+id/btWhatsApp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btFacebook" />
+            app:layout_constraintStart_toEndOf="@+id/btWhatsApp"
+            app:layout_constraintTop_toTopOf="@+id/btWhatsApp" />
 
         <ImageButton
             android:id="@+id/btWhatsApp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@{vm.whatsApp ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.whatsAppClick()}"
             android:padding="25dp"
             android:src="@{vm.whatsApp ? vm.srcWhatsAppOn : vm.srcWhatsAppOff}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="74dp" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btSkype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@{vm.whatsApp ? vm.btOn : vm.btOff}"
+            android:onClick="@{()->vm.whatsAppClick()}"
+            android:padding="25dp"
+            android:src="@{vm.whatsApp ? vm.srcWhatsAppOn : vm.srcWhatsAppOff}"
+            app:layout_constraintEnd_toStartOf="@+id/btTwitter"
+            app:layout_constraintStart_toEndOf="@+id/btWhatsApp"
+            app:layout_constraintTop_toBottomOf="@+id/btWhatsApp" />
 
         <ImageView
             android:id="@+id/btNext"
