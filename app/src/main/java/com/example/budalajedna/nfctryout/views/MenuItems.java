@@ -25,8 +25,8 @@ public class MenuItems extends View {
     private Bitmap gmail;
 
     private double width;
-    private float buttonWidth=0;
-    private float buttonHeight=0;
+    private float buttonPrecnik=0;
+
 
     private int pictureSize;
 
@@ -57,7 +57,7 @@ public class MenuItems extends View {
             @Override
             public void onGlobalLayout() {
                 width = getWidth() * 0.5;
-                buttonHeight=getHeight();
+
                 pictureSize = (int) (width * 0.4);
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -72,37 +72,27 @@ public class MenuItems extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         Bitmap buttonShape = this.buttonShape;
-        buttonWidth=buttonShape.getWidth();
-        Bitmap bitmap=Bitmap.createBitmap(resize(filter(facebook, buttonShape), pictureSize, pictureSize));
-        canvas.drawBitmap(resize(filter(facebook, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 8, width, 0), getY(getHeight() / 2, 8, width, 0), paint);
-        buttonShape = rotate(buttonShape, -45);
-        canvas.drawBitmap(resize(filter(whatsApp, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 8, width, 1), getY(getHeight() / 2, 8, width, 1), paint);
-        buttonShape = rotate(buttonShape, -45);
-        canvas.drawBitmap(resize(filter(gmail, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 8, width, 2), getY(getHeight() / 2, 8, width, 2), paint);
+        buttonPrecnik=buttonShape.getWidth();
+        canvas.drawBitmap(resize(filter(facebook, buttonShape), pictureSize, pictureSize), (getWidth()-buttonPrecnik) / 2, (getHeight()-buttonPrecnik) / 2, paint);
+        //buttonShape = rotate(buttonShape, -45);
+        canvas.drawBitmap(resize(filter(whatsApp, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 6, width, 0,50), getY(getHeight() / 2, 6, width, 0,50), paint);
+        //buttonShape = rotate(buttonShape, -45);
+        canvas.drawBitmap(resize(filter(gmail, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 6, width, 1,50), getY(getHeight() / 2, 6, width, 1,50), paint);
+        canvas.drawBitmap(resize(filter(gmail, buttonShape), pictureSize, pictureSize), getX(getWidth() / 2, 6, width, 2,50), getY(getHeight() / 2, 6, width, 2,50), paint);
     }
 
-    private float getX(float xc, int m, double width, int i) {
-        float correction=0;
-        if(i==0){
-            correction=(float)Math.sin(Math.PI/4)*(64f/117f)*buttonWidth;
-            return correction;
-        }
-        else{
-            correction = (64f/117f)*buttonWidth;
-            return correction;
-        }
-        //return (float) (xc + Math.cos((i+1) * 2 *Math.PI / m) * 1 / 2 * width)-correction;
+    private float getX(float xc, int m, double width, int i,float dist) {
+        float distTotal=buttonPrecnik+dist;
+        float r= buttonPrecnik/2f;
+        return (float) (xc + Math.cos(i * 2 *Math.PI / m) * distTotal-r);
 
     }
 
-    private float getY(float yc, int m, double width, int i) {
-        float correction=0;
-        if(i==0){
-            correction=(float)Math.sin(Math.PI/4)*(64f/117f)*buttonWidth;
-            return correction;
-        }
-        //return (float) (yc - Math.sin((i+1)*2*Math.PI / m) * 1 / 2 * width)+correction;
-        return 0;
+    private float getY(float yc, int m, double width, int i,float dist) {
+        float distTotal=buttonPrecnik+dist;
+        float r= buttonPrecnik/2f;
+        return (float) (yc - Math.sin(i*2*Math.PI / m) * distTotal-r);
+
     }
 
     private Bitmap filter(Bitmap source, Bitmap filter) {
