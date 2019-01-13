@@ -13,7 +13,7 @@ import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
     private NfcAdapter nfcAdapter;
-    MainCallback mainCallback;
+    private MainCallback mainCallback;
 
     public NFCManager(MainCallback mainCallback) {
         this.mainCallback = mainCallback;
@@ -56,14 +56,6 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
 
     @Override
     public void onNdefPushComplete(NfcEvent event) {
-        final String eventString = "onNodePushComplete\n" + event.toString();
-        mainCallback.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(mainCallback.getActivity().getApplicationContext(),
-                        eventString,
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+
     }
 }

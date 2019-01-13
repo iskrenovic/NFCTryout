@@ -5,6 +5,7 @@ import org.json.JSONObject;
 public class User {
 
     private String contactName = "";
+    private String profilePicture = "";
 
     private String phoneNumber = "";
     private boolean sPhone = false;
@@ -18,13 +19,18 @@ public class User {
     private String twitterId = "";
     private boolean sTwitter = false;
 
+    private Callback callback;
 
+    public User(Callback callback){
+        this.callback = callback;
+    }
 
     public String read(){
 
         JSONObject object = new JSONObject();
         try {
             object.put("contactName", contactName);
+            object.put("profilePicture",profilePicture);
             object.put("phoneNumber", phoneNumber);
             object.put("sPhone", sPhone);
             object.put("email",email);
@@ -42,6 +48,7 @@ public class User {
         JSONObject object = new JSONObject();
         try {
             object.put("contactName", contactName);
+            object.put("profilePicture",profilePicture);
             if(sPhone)object.put("phoneNumber", phoneNumber);
             if(sEmail)object.put("email",email);
             if(sFacebook)object.put("facebookId", facebookId);
@@ -56,6 +63,8 @@ public class User {
         try {
             JSONObject object = new JSONObject(info);
             contactName = object.getString("contactName");
+            callback.getUserName(contactName);
+            object.put("profilePicture",profilePicture);
             phoneNumber = object.getString("phoneNumber");
             sPhone = object.getBoolean("sPhone");
             email = object.getString("email");
@@ -103,6 +112,10 @@ public class User {
 
     public void clickFacebook(){sFacebook = !sFacebook;}
 
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
@@ -116,4 +129,8 @@ public class User {
     }
 
     public void setFacebookId(String facebookId) {this.facebookId = facebookId;}
+
+    public interface Callback{
+        void getUserName(String name);
+    }
 }
