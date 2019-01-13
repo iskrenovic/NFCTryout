@@ -318,7 +318,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
-    public void openTwitterAccount(Intent intent) {
+    public void openTwitterLink(Intent intent) {
         startActivity(intent);
     }
 

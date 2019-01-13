@@ -12,7 +12,7 @@ public class AddContact{
         this.callback=callback;
     }
 
-    public void addContactInfo(String contactName, String phoneNumber, String mail){
+    public void addContactInfo(String contactName, String phoneNumber, String mail, String profilePicture){
 
         ArrayList<ContentProviderOperation> operations=new ArrayList<ContentProviderOperation>();
 
@@ -23,7 +23,7 @@ public class AddContact{
                 .build());
 
         // Dodaje ime kontakta
-        if (contactName != "") {
+        if (!contactName.equals("")) {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE,ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
@@ -32,7 +32,7 @@ public class AddContact{
         }
 
         //Dodaje broj
-        if (phoneNumber != "") {
+        if (!phoneNumber.equals("")) {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
@@ -41,9 +41,8 @@ public class AddContact{
                     .build());
         }
 
-
         //Dodaje mail
-        if (mail != "") {
+        if (!mail.equals("")) {
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
@@ -51,9 +50,16 @@ public class AddContact{
                     .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_MOBILE)
                     .build());
         }
+
+        //PROFILE PICTURE
+        if(!profilePicture.equals("")){
+            operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE,profilePicture)
+                    .build());
+        }
         callback.addContact(operations);
-
-
     }
     public interface ContactCallback{
         void addContact(ArrayList<ContentProviderOperation> operations);

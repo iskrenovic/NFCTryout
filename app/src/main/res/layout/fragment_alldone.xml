@@ -20,7 +20,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="20pt"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAccent"
             android:text="Završili ste inicijaliaciju. Čestitamo!"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

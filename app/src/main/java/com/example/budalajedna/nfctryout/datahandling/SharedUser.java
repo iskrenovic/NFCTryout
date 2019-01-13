@@ -30,8 +30,9 @@ public class SharedUser implements AddContact.ContactCallback{
 
         try {
             JSONObject object = new JSONObject(info);
-            addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"));
-            callback.openTwitterAccount(twitterHandler.openUser(object.getString("twitterId")));
+            addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"), object.getString("profilePicture"));
+            callback.openTwitterLink(twitterHandler.openUser(object.getString("twitterId")));
+            //callback.openTwitterLink(twitterHandler.isFollowing(object.getString("twitterId")));
             new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
             callback.userSaved();
         }
@@ -47,7 +48,7 @@ public class SharedUser implements AddContact.ContactCallback{
 
     public interface Callback {
         void addContact(ArrayList<ContentProviderOperation> operations);
-        void openTwitterAccount(Intent intent);
+        void openTwitterLink(Intent intent);
         void userSaved();
     }
 }

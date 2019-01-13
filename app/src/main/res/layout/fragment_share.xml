@@ -19,28 +19,28 @@
             android:id="@+id/btPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="117dp"
             android:background="@{vm.contact ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.contactClick()}"
             android:padding="25dp"
             android:src="@{vm.contact ? vm.srcContactOn : vm.srcContactOff}"
+            app:layout_constraintEnd_toStartOf="@+id/btEmail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:layout_editor_absoluteY="249dp" />
 
 
         <ImageButton
             android:id="@+id/btInstagram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:background="@{vm.instagram ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.instagramClick()}"
             android:padding="25dp"
             android:src="@{vm.instagram ? vm.srcInstagramOn : vm.srcInstagramOff}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btPhone" />
+            app:layout_constraintTop_toBottomOf="@+id/btPhone"
+            tools:layout_editor_absoluteX="16dp" />
 
         <ImageButton
             android:id="@+id/btFacebook"
@@ -60,15 +60,13 @@
             android:id="@+id/btEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="117dp"
+            android:layout_marginTop="249dp"
             android:background="@{vm.email ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.emailClick()}"
             android:padding="25dp"
             android:src="@{vm.email ? vm.srcEmailOn : vm.srcEmailOff}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -90,14 +88,13 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:background="@{vm.whatsApp ? vm.btOn : vm.btOff}"
             android:onClick="@{()->vm.whatsAppClick()}"
             android:padding="25dp"
             android:src="@{vm.whatsApp ? vm.srcWhatsAppOn : vm.srcWhatsAppOff}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btEmail" />
+            tools:layout_editor_absoluteY="74dp" />
 
         <ImageView
             android:id="@+id/btNext"
