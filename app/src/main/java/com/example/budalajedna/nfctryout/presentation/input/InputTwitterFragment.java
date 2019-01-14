@@ -3,6 +3,7 @@ package com.example.budalajedna.nfctryout.presentation.input;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +15,14 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentItwitterBinding;
+import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
@@ -76,6 +80,16 @@ public class InputTwitterFragment extends Fragment {
             @Override
             public void success(Result<TwitterSession> result) {
                 callback.setTwitterUserID(result.data.getUserId() + "");
+                TwitterSession session= TwitterCore.getInstance().getSessionManager().getActiveSession();
+                TwitterAuthToken authToken=session.getAuthToken();
+                String token=authToken.token;
+                String auth=authToken.toString();
+                String secret=authToken.secret;
+
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://api.twitter.com/oauth/authenticate?oauth_token="+R.string.auth_token));
+                callback.openIntent(intent);
                 callback.nextFragment(5);
             }
 
@@ -95,5 +109,6 @@ public class InputTwitterFragment extends Fragment {
     public interface Callback{
         void setTwitterUserID(String userName);
         void nextFragment(int startIndex);
+        void openIntent(Intent intent);
     }
 }
