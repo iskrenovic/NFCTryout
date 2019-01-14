@@ -62,6 +62,11 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     public void setButtonClicked(){
         if(buttonStates[MediaType.phoneNumber.getValue()]) shareViewModel.contactClick();
         if(buttonStates[MediaType.email.getValue()]) shareViewModel.emailClick();
+        if(buttonStates[MediaType.skype.getValue()]) shareViewModel.skypeClick();
+        if(buttonStates[MediaType.whatsapp.getValue()]) shareViewModel.whatsAppClick();
+        if(buttonStates[MediaType.twitter.getValue()]) shareViewModel.twitterClick();
+        if(buttonStates[MediaType.facebook.getValue()]) shareViewModel.facebookClick();
+        if(buttonStates[MediaType.instagram.getValue()]) shareViewModel.instagramClick();
 
     }
 
@@ -102,6 +107,21 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     @Override
     public void twitterClick() {
         mainCallback.getUser().clickTwitter();
+    }
+
+    @Override
+    public void instagramClick() {
+        mainCallback.getUser().clickInstagram();
+    }
+
+    @Override
+    public void skypeClick() {
+        mainCallback.getUser().clickSkype();
+    }
+
+    @Override
+    public void whatsAppClick() {
+        mainCallback.getUser().clickWhatsApp();
     }
 
     @Override

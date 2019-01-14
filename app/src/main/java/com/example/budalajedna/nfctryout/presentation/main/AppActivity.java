@@ -55,6 +55,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     private boolean newUser = false;
     private int currentIndex = 0;
+    private boolean done;
 
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
@@ -64,7 +65,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private InputInstagramFragment inputInstagramFragment;
 
     private boolean[] mediaToShare;
-    private final int mediaNumber = 6;
+    private final int mediaNumber = 7;
     private Animation animation;
 
     @Override
@@ -183,7 +184,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     private void getNextMediaFragment() {
-        for (int i = currentIndex; i < mediaNumber; ++i) {
+        done = false;
+        for (int i = currentIndex; i < mediaNumber && !done; ++i) {
             if (mediaToShare[i]) {
                 Fragment fragment = getFragment(i);
                 if (fragment == null) {
@@ -194,6 +196,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     currentIndex = finalI;
+                                    doneTrue();
                                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(finalI)).commitAllowingStateLoss();
                                 }
                             })
@@ -204,12 +207,17 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                                 }
                             }).show();
                 } else {
-                    currentIndex = i;
+                    currentIndex = i + 1;
+                    doneTrue();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment).commitAllowingStateLoss();
                 }
 
             }
         }
+    }
+
+    private void doneTrue(){
+        done = true;
     }
 
     private void getLastMediaFragment(){
@@ -218,7 +226,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, helloFragment).commitAllowingStateLoss();
         }
         else if(currentIndex != 0){
-            for (int i = currentIndex; i > 0; --i) {
+            for (int i = currentIndex - 1; i > 0; --i) {
                 if(mediaToShare[i]){
                     currentIndex = i;
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(i)).commitAllowingStateLoss();
@@ -229,7 +237,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     private Fragment getFragment(int index) {
         switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
-            case 0: case 4:
+            case 0: case 3:
                 if (user.getPhoneNumber().equals("")) //PHONE NUMBER
                     return inputPhoneNumberFragment;
                 else return null;
@@ -242,15 +250,18 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                     return inputEmailFragment;
                 else return null;
 
-            case 5:
+            case 4:
                 if (user.getTwitterId().equals("")) { //TWITTER
                     return inputTwitterFragment;
                 } else return null;
 
-            case 6:
+            case 5:
                 if (user.getFacebookId().equals(""))  //FACEBOOK
                     return inputFacebookFragment;
                 else return null;
+
+            case 6:
+                return inputInstagramFragment;  //INSTAGRAM
 
             default:
                 readWriteClient.save(user.read());
@@ -270,6 +281,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                     return inputTwitterFragment;    //twitter
             case 6:
                     return inputFacebookFragment; //facebook
+            case 7:
+                return inputInstagramFragment;  //INSTAGRAM
             default:
                 readWriteClient.save(user.read());
                 return allDoneFragment;

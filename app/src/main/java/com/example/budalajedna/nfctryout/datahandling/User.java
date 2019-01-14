@@ -19,6 +19,10 @@ public class User {
     private String twitterId = "";
     private boolean sTwitter = false;
 
+    private boolean sSkype = false;
+    private boolean sWhatsApp = false;
+    private boolean sInstagram = false;
+
     private Callback callback;
 
     public User(Callback callback){
@@ -77,7 +81,7 @@ public class User {
     }
 
     public boolean[] getKnown(){
-        return new boolean[] {false,false,sPhone, sEmail, sTwitter};
+        return new boolean[] {sPhone,sEmail,sSkype, sWhatsApp, sTwitter, sFacebook, sInstagram};
     }
 
     public String getPhoneNumber(){
@@ -115,6 +119,16 @@ public class User {
     }
 
     public void clickFacebook(){sFacebook = !sFacebook;}
+
+    public void clickSkype() {
+        sSkype = !sSkype;
+    }
+
+    public void clickWhatsApp(){
+        sWhatsApp = !sWhatsApp;
+    }
+
+    public void clickInstagram(){sInstagram = !sInstagram;}
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;

@@ -233,6 +233,7 @@ public class ShareViewModel extends ViewModel {
 
     public void instagramClick(){
         instagram.setValue(!instagram.getValue());
+        callback.instagramClick();
     }
 
     public void contactClick(){
@@ -251,15 +252,18 @@ public class ShareViewModel extends ViewModel {
         callback.twitterClick();
     }
 
-    public void whatsAppClick(){whatsApp.setValue(!whatsApp.getValue());}
+    public void whatsAppClick(){
+        whatsApp.setValue(!whatsApp.getValue());
+        callback.whatsAppClick();
+    }
 
     public void skypeClick(){
         skype.setValue(!skype.getValue());
-        callback.twitterClick();
+        callback.skypeClick();
     }
 
     public boolean[] getMediaToShare(){
-        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue(), twitter.getValue(), skype.getValue()};
+        return new boolean[]{contact.getValue(), email.getValue(), skype.getValue(), whatsApp.getValue(), twitter.getValue(), facebook.getValue(), instagram.getValue()};
     }
 
     public void next(){
@@ -272,5 +276,8 @@ public class ShareViewModel extends ViewModel {
         void emailClick();
         void facebookClick();
         void twitterClick();
+        void instagramClick();
+        void skypeClick();
+        void whatsAppClick();
     }
 }
