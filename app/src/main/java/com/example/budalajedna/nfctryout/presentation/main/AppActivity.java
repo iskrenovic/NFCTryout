@@ -19,20 +19,17 @@ import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.Skype;
 import com.example.budalajedna.nfctryout.datahandling.User;
-import com.example.budalajedna.nfctryout.datahandling.Viber;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
-import com.example.budalajedna.nfctryout.presentation.share.NewShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
 
@@ -55,7 +52,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private HelloFragment helloFragment;
 
     private ShareFragment shareFragment;
-    private NewShareFragment newShareFragment;
 
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
@@ -88,8 +84,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         shareFragment = new ShareFragment();
         shareFragment.setCallback(this, this);
-
-        newShareFragment = new NewShareFragment();
 
         helloFragment = new HelloFragment();
         helloFragment.setCallbacks(this, this);
@@ -251,6 +245,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
     }
 
+    @Override
+    public void emptyField(String text) {
+        toastMaker(text);
+    }
+
 
     @Override
     public void nextShare(boolean[] mediaToShare) {
@@ -271,6 +270,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public void nextFragment(int startIndex) {
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(startIndex)).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void nextField(String text) {
+
     }
 
 

@@ -35,10 +35,12 @@ public class InputPhoneNumberViewModel extends ViewModel {
     }
 
     public void nextFragment(){
-        callback.nextFragment(phoneNumber.getValue());
+        if(phoneNumber.getValue()!=null) callback.nextFragment(phoneNumber.getValue());
+        else callback.emptyPhone();
     }
 
     public interface Callback{
         void nextFragment(String phoneNumber);
+        void emptyPhone();
     }
 }

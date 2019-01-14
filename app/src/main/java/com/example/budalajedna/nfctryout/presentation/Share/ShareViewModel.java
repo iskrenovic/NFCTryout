@@ -205,19 +205,19 @@ public class ShareViewModel extends ViewModel {
         btOff.setValue(fragment.getResources().getDrawable(R.drawable.custom_button));
 
         srcFacebookOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_facebook));
-        srcFacebookOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_facebook));
+        srcFacebookOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_facebook_gray));
 
         srcInstagramOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_instagram));
         srcInstagramOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_instagram_gray));
 
-        srcContactOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_white));
-        srcContactOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_white));
+        srcContactOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_call));
+        srcContactOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_call_grey));
 
-        srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
-        srcEmailOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
+        srcEmailOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_email));
+        srcEmailOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_email_grey));
 
         srcTwitterOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_twitter));
-        srcTwitterOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_twitter));
+        srcTwitterOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_twitter_gray));
 
         srcWhatsAppOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_whatsapp));
         srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_whatsapp_gray));
