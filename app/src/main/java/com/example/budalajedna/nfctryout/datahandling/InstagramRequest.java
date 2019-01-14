@@ -8,6 +8,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -35,7 +37,17 @@ public class InstagramRequest extends AsyncTask<Void,String,String> {
     @Override
     protected void onPostExecute(String response) {
         super.onPostExecute(response);
-        String id=response;
+        if(response!=null){
+            try{
+                JSONObject jsonObject=new JSONObject(response);
+                JSONObject jsonData=jsonObject.getJSONObject("data");
+                String userID=jsonData.getString("id");
+                String userName=jsonData.getString("username");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
 
     }
 }

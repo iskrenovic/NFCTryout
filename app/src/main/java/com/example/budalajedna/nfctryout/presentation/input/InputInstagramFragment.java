@@ -25,7 +25,7 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_itwitter,container,false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_instagram,container,false);
 
         View view = this.binding.getRoot();
 
