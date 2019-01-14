@@ -44,6 +44,10 @@ public class HelloViewModel extends ViewModel {
         return picture;
     }
 
+    public void setName(String name) {
+        this.name.setValue(name);
+    }
+
     public void setPicture(Drawable picture) {
         this.picture.setValue(picture);
     }

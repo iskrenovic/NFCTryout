@@ -90,7 +90,7 @@ public class InputTwitterFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://api.twitter.com/oauth/authenticate?oauth_token="+R.string.auth_token));
                 callback.openIntent(intent);
-                callback.nextFragment(5);
+                callback.nextFragment();
             }
 
             @Override
@@ -108,7 +108,7 @@ public class InputTwitterFragment extends Fragment {
 
     public interface Callback{
         void setTwitterUserID(String userName);
-        void nextFragment(int startIndex);
+        void nextFragment();
         void openIntent(Intent intent);
     }
 }

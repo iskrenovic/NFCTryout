@@ -1,6 +1,8 @@
 package com.example.budalajedna.nfctryout.presentation.main;
 
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -8,7 +10,9 @@ import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.budalajedna.nfctryout.R;
@@ -16,9 +20,8 @@ import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
-import com.example.budalajedna.nfctryout.datahandling.Skype;
-import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.example.budalajedna.nfctryout.datahandling.User;
+import com.example.budalajedna.nfctryout.presentation.dialogs.EditDialog;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
@@ -31,9 +34,12 @@ import com.facebook.AccessToken;
 import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback {
+        InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback,
+        WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback {
 
-    private MainViewModel mainViewModel;
+    private MainViewModel viewModel;
+
+    private ImageButton backButton;
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
@@ -41,11 +47,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private User user;
     private SharedUser sharedUser;
 
-
-
     private HelloFragment helloFragment;
-
     private ShareFragment shareFragment;
+
+    private boolean newUser = false;
+    private int currentIndex = 0;
 
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
@@ -60,12 +66,19 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.app_activity);
 
-        mainViewModel = new MainViewModel();
+        viewModel = new MainViewModel();
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLastMediaFragment();
+            }
+        });
 
         nfcManager = new NFCManager(this);
         wifiManager = new WifiManager(this, this, this);
@@ -99,17 +112,14 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         String userInfo = readWriteClient.read();
 
         if (userInfo.equals("")) {
-            mainViewModel.setText("Dobrodoso u Handshake");
+            viewModel.setText("Dobrodoso u Handshake");
+            newUser = true;
+            currentIndex = -1;
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.helloFragment).commitAllowingStateLoss();
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.shareFragment).commitAllowingStateLoss();
             shareFragment.setButtonStates(user.set(userInfo));
         }
-
-        TwitterHandler twitterHandler = new TwitterHandler();
-
-        Skype skype = new Skype(this);
-
     }
 
     @Override
@@ -135,6 +145,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        if((currentIndex==0&&!newUser)||currentIndex==-1) super.onBackPressed();
+        getLastMediaFragment();
+
+    }
+
     private void disconnectWIFI() {
         if (wifiManager.isRegistred()) {
             wifiManager.unregisterReceiver();
@@ -158,17 +175,54 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    private Fragment getNextMediaIndex(int startIndex) {
-        for (int i = startIndex; i < mediaNumber; i++) {
-            if (mediaToShare[i]) if (getFragment(i) != null) return getFragment(i);
+    private void getNextMediaFragment() {
+        for (int i = currentIndex; i < mediaNumber; ++i) {
+            if (mediaToShare[i]) {
+                Fragment fragment = getFragment(i);
+                if (fragment == null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    final int finalI = i;
+                    builder.setMessage("Vec imate upisane ove informacije, da li zelite da ih promenite?")
+                            .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    currentIndex = finalI;
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(finalI)).commitAllowingStateLoss();
+                                }
+                            })
+                            .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).show();
+                } else {
+                    currentIndex = i;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment).commitAllowingStateLoss();
+                }
+
+            }
         }
-        if (startIndex == 0) toastMaker("VEC STE UBACILI OVE INFORMACIJE");
-        return null;
+    }
+
+    private void getLastMediaFragment(){
+        if(currentIndex==0 && newUser){
+            currentIndex = -1;
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, helloFragment).commitAllowingStateLoss();
+        }
+        else if(currentIndex != 0){
+            for (int i = currentIndex; i > 0; --i) {
+                if(mediaToShare[i]){
+                    currentIndex = i;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(i)).commitAllowingStateLoss();
+                }
+            }
+        }
     }
 
     private Fragment getFragment(int index) {
         switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
-            case 0:
+            case 0: case 4:
                 if (user.getPhoneNumber().equals("")) //PHONE NUMBER
                     return inputPhoneNumberFragment;
                 else return null;
@@ -177,23 +231,38 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                     return inputEmailFragment;
                 else return null;
             case 2:
-                if (user.getFacebookId().equals(""))  //FACEBOOK
-                    return inputFacebookFragment;
-                else return null;
-
-            case 4:
-                if (user.getPhoneNumber().equals("")) //WHATSAPP
-                    return inputPhoneNumberFragment;
+                if (user.getFacebookId().equals(""))  //SKYPE
+                    return inputEmailFragment;
                 else return null;
 
             case 5:
                 if (user.getTwitterId().equals("")) { //TWITTER
-
-
                     return inputTwitterFragment;
                 } else return null;
 
+            case 6:
+                if (user.getFacebookId().equals(""))  //FACEBOOK
+                    return inputFacebookFragment;
+                else return null;
 
+            default:
+                readWriteClient.save(user.read());
+                return allDoneFragment;
+        }
+    }
+
+    private Fragment getEditFragment(int index) {
+        switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
+            case 0: case 4:
+                    return inputPhoneNumberFragment;  //phone i whatsApp
+            case 1:
+                    return inputEmailFragment;  //email
+            case 2:
+                    return inputEmailFragment;  //skype
+            case 5:
+                    return inputTwitterFragment;    //twitter
+            case 6:
+                    return inputFacebookFragment; //facebook
             default:
                 readWriteClient.save(user.read());
                 return allDoneFragment;
@@ -230,6 +299,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     @Override
     public void nextHello() {
+        currentIndex = 0;
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.shareFragment).commitAllowingStateLoss();
     }
 
@@ -242,7 +312,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public void nextShare(boolean[] mediaToShare) {
         this.mediaToShare = mediaToShare;
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getNextMediaIndex(0)).commitAllowingStateLoss();
+        getNextMediaFragment();
     }
 
     @Override
@@ -251,8 +321,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
-    public void nextFragment(int startIndex) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getNextMediaIndex(startIndex)).commitAllowingStateLoss();
+    public void nextFragment() {
+        getNextMediaFragment();
     }
 
     @Override
@@ -310,7 +380,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     @Override
     public void getUserName(String name) {
-        mainViewModel.setText(name + ", sta zelis da delis?");
+        viewModel.setText(name + ", sta zelis da delis?");
     }
 
 
@@ -318,5 +388,14 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     public void setAccesToken(AccessToken accesToken) {
 
     }
-}
 
+    @Override
+    public void editInfo() {
+
+    }
+
+    @Override
+    public void clickBack() {
+        getLastMediaFragment();
+    }
+}

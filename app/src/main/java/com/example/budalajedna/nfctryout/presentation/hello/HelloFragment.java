@@ -52,6 +52,9 @@ public class HelloFragment extends Fragment implements HelloViewModel.Callback{
 
         binding.setVm(this.viewModel);
 
+        viewModel.setName(mainCallback.getUser().getName());
+
+
         return this.binding.getRoot();
     }
 

@@ -94,6 +94,10 @@ public class User {
 
     public String getFacebookId(){return facebookId;}
 
+    public String getName() {
+        return contactName;
+    }
+
     public void setContactName(String contactName){
         this.contactName = contactName;
     }
