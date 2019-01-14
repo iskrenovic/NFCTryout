@@ -1,5 +1,6 @@
 package com.example.budalajedna.nfctryout.presentation.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
 import android.content.DialogInterface;
@@ -25,6 +26,8 @@ import com.example.budalajedna.nfctryout.presentation.dialogs.EditDialog;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment.InstagramCallback;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
@@ -33,9 +36,9 @@ import com.facebook.AccessToken;
 
 import java.util.ArrayList;
 
-public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
-        InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback,
-        WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback {
+public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback,
+        InputEmailFragment.callback, InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,
+        AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback,InstagramCallback {
 
     private MainViewModel viewModel;
 
@@ -58,6 +61,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private InputFacebookFragment inputFacebookFragment;
     private InputTwitterFragment inputTwitterFragment;
     private AllDoneFragment allDoneFragment;
+    private InputInstagramFragment inputInstagramFragment;
 
     private boolean[] mediaToShare;
     private final int mediaNumber = 6;
@@ -108,6 +112,9 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         user = new User(this);
         sharedUser = new SharedUser(this, this);
+
+        inputInstagramFragment = new InputInstagramFragment();
+        inputInstagramFragment.setInstagramCallback(this);
 
         String userInfo = readWriteClient.read();
 
@@ -370,6 +377,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         } catch (Exception e) {
             Log.d("ERROR", e.toString());
         }
+
     }
 
     @Override
@@ -383,6 +391,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         viewModel.setText(name + ", sta zelis da delis?");
     }
 
+
+
+
+    @Override
+    public Activity getMainActivity() {
+        return this;
+    }
 
     @Override
     public void setAccesToken(AccessToken accesToken) {
