@@ -53,11 +53,14 @@ public class HelloViewModel extends ViewModel {
     }
 
     public void nextStep(){
-        callback.nextStep(name.getValue());
+        if(name.getValue()!=null) callback.nextStep(name.getValue());
+        else callback.emptyName();
+
     }
 
     public interface Callback{
         void nextStep(String contactName);
+        void emptyName();
         void getProfilePicture();
     }
 }

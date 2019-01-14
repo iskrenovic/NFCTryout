@@ -9,11 +9,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.budalajedna.nfctryout.R;
+import com.example.budalajedna.nfctryout.datahandling.Instagram;
 
 public class InstagramAuthDialog extends Dialog {
     private final String redirect_url;
     private final String request_url;
-    private AuthenticationListener listener;
+
+    private Instagram instagram;
 
     private WebViewClient webViewClient = new WebViewClient() {
         @Override
@@ -32,15 +34,14 @@ public class InstagramAuthDialog extends Dialog {
                 Uri uri = Uri.EMPTY.parse(url);
                 String access_token = uri.getEncodedFragment();
                 access_token = access_token.substring(access_token.lastIndexOf("=") + 1);
-                listener.onTokenReceived(access_token);
+                instagram.onTokenReceived(access_token);
             }
         }
 
     };
 
-    public InstagramAuthDialog(@NonNull Context context, AuthenticationListener listener) {
+    public InstagramAuthDialog(@NonNull Context context) {
         super(context);
-        this.listener = listener;
         this.redirect_url = context.getResources().getString(R.string.redirect_url);
         this.request_url = context.getResources().getString(R.string.base_url) +
                 "oauth/authorize/?client_id=" +

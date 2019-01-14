@@ -74,8 +74,8 @@
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="CIRCLE" />
-                                      <entry key="imageAsset" value="C:\Users\Budala Jedna\Desktop\instagram_gray.png" />
-                                      <entry key="outputName" value="round_instagram_gray" />
+                                      <entry key="imageAsset" value="C:\Users\Budala Jedna\Desktop\call_grey.png" />
+                                      <entry key="outputName" value="round_call_grey" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -98,7 +98,39 @@
         </entry>
         <entry key="vectorWizard">
           <value>
-            <PersistentState />
+            <PersistentState>
+              <option name="children">
+                <map>
+                  <entry key="vectorAssetStep">
+                    <value>
+                      <PersistentState>
+                        <option name="children">
+                          <map>
+                            <entry key="clipartAsset">
+                              <value>
+                                <PersistentState>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_navigate_before_black_24dp.xml" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputName" value="ic_back" />
+                            <entry key="sourceFile" value="C:\Users\Budala Jedna" />
+                          </map>
+                        </option>
+                      </PersistentState>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PersistentState>
           </value>
         </entry>
       </map>

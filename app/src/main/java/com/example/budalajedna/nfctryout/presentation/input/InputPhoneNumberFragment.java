@@ -50,7 +50,13 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
         callback.nextFragment(3);
     }
 
+    @Override
+    public void emptyPhone() {
+        callback.nextField("Upišite broj telefona...");
+    }
+
     public interface Callback{
         void nextFragment(int startIndex);
+        void nextField(String text);
     }
 }

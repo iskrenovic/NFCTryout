@@ -45,13 +45,12 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
 
     @Override
     public void onClickLogin() {
-        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(instagramCallback.getMainActivity(), instagramCallback.getAuthListener());
+        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(instagramCallback.getMainActivity());
         authenticationDialog.setCancelable(true);
         authenticationDialog.show();
     }
 
     public interface InstagramCallback{
         Activity getMainActivity();
-        InstagramAuthDialog.AuthenticationListener getAuthListener();
     }
 }

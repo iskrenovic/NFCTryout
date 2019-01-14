@@ -13,18 +13,20 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.main.AppActivity">
+        tools:context=".presentation.main.AppActivity"
+        android:background="@color/colorPrimary">
 
         <ImageButton
             android:id="@+id/btPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:background="@{vm.contact ? vm.btOn : vm.btOff}"
+            android:background="@android:color/transparent"
             android:onClick="@{()->vm.contactClick()}"
-            android:padding="25dp"
+            android:elevation="10dp"
+            android:scaleType="fitXY"
             android:src="@{vm.contact ? vm.srcContactOn : vm.srcContactOff}"
             app:layout_constraintBottom_toTopOf="@+id/btWhatsApp"
             app:layout_constraintEnd_toStartOf="@+id/btWhatsApp"
@@ -68,14 +70,15 @@
 
         <ImageButton
             android:id="@+id/btEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@{vm.email ? vm.btOn : vm.btOff}"
+            android:background="@android:color/transparent"
             android:onClick="@{()->vm.emailClick()}"
-            android:padding="25dp"
+            android:scaleType="fitXY"
+            android:elevation="10dp"
             android:src="@{vm.email ? vm.srcEmailOn : vm.srcEmailOff}"
             app:layout_constraintBottom_toTopOf="@+id/btWhatsApp"
             app:layout_constraintEnd_toStartOf="@+id/btTwitter"

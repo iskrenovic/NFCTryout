@@ -92,6 +92,11 @@ public class HelloFragment extends Fragment implements HelloViewModel.Callback{
     }
 
     @Override
+    public void emptyName() {
+        callback.emptyField("Upišite ime i prezime...");
+    }
+
+    @Override
     public void getProfilePicture() {
         Intent intent = new Intent();
         intent.setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
@@ -102,5 +107,6 @@ public class HelloFragment extends Fragment implements HelloViewModel.Callback{
 
     public interface Callback{
         void nextHello();
+        void emptyField(String text);
     }
 }
