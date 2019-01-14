@@ -18,6 +18,7 @@ import com.example.budalajedna.nfctryout.datahandling.Facebook;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.Skype;
+import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.example.budalajedna.nfctryout.datahandling.User;
 import com.example.budalajedna.nfctryout.datahandling.Viber;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
@@ -114,7 +115,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         String userInfo = readWriteClient.read();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.newShareFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
 
         /*if(userInfo.equals("")){
             mainViewModel.setText("Dobrodoso u Handshake");
@@ -126,6 +127,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         }*/
 
         facebook = new Facebook(this,this);
+        TwitterHandler twitterHandler=new TwitterHandler();
 
         Skype skype=new Skype(this);
 
@@ -272,6 +274,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public void nextFragment(int startIndex) {
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,getNextMediaIndex(startIndex)).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void openIntent(Intent intent) {
+        startActivity(intent);
     }
 
 
