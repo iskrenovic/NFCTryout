@@ -39,6 +39,10 @@ public class ShareViewModel extends ViewModel {
     private MutableLiveData<Drawable> srcWhatsAppOff;
     private MutableLiveData<Boolean> whatsApp;
 
+    private MutableLiveData<Drawable> srcSkypeOn;
+    private MutableLiveData<Drawable> srcSkypeOff;
+    private MutableLiveData<Boolean> skype;
+
     public ShareViewModel() {
 
         btOn = new MutableLiveData<>();
@@ -73,6 +77,11 @@ public class ShareViewModel extends ViewModel {
         srcWhatsAppOff = new MutableLiveData<>();
         whatsApp = new MutableLiveData<>();
         whatsApp.setValue(false);
+
+        srcSkypeOn = new MutableLiveData<>();
+        srcSkypeOff = new MutableLiveData<>();
+        skype = new MutableLiveData<>();
+        skype.setValue(false);
     }
 
     public LiveData<Drawable> getBtOn(){
@@ -156,7 +165,6 @@ public class ShareViewModel extends ViewModel {
     }
 
 
-
     /*WhatsApp*/
 
     public LiveData<Drawable> getSrcWhatsAppOn() {
@@ -171,6 +179,20 @@ public class ShareViewModel extends ViewModel {
         return whatsApp;
     }
 
+    /*Skype*/
+
+    public LiveData<Drawable> getSrcSkypeOn() {
+        return srcSkypeOn;
+    }
+
+    public LiveData<Drawable> getSrcSkypeOff() {
+        return srcSkypeOff;
+    }
+
+    public LiveData<Boolean> getSkype() {
+        return skype;
+    }
+
     public void setFragment(ShareFragment fragment) {
         this.fragment = fragment;
         callback = fragment;
@@ -182,23 +204,26 @@ public class ShareViewModel extends ViewModel {
         btOn.setValue(fragment.getResources().getDrawable(R.drawable.custom_button_click));
         btOff.setValue(fragment.getResources().getDrawable(R.drawable.custom_button));
 
-        srcFacebookOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_flogo_color));
-        srcFacebookOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_flogo_white));
+        srcFacebookOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_facebook));
+        srcFacebookOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_facebook));
 
-        srcInstagramOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_instagram_color));
-        srcInstagramOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_instagram_white));
+        srcInstagramOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_instagram));
+        srcInstagramOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_instagram_gray));
 
-        srcContactOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_color));
+        srcContactOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_white));
         srcContactOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_phone_white));
 
-        srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_color));
+        srcEmailOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
         srcEmailOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_email_white));
 
-        srcTwitterOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_twitterlogo_color));
-        srcTwitterOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_twitterlogo_white));
+        srcTwitterOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_twitter));
+        srcTwitterOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_twitter));
 
-        srcWhatsAppOn.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_color));
-        srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.drawable.ic_whatsapplogo_white));
+        srcWhatsAppOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_whatsapp));
+        srcWhatsAppOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_whatsapp_gray));
+
+        srcSkypeOn.setValue(fragment.getResources().getDrawable(R.mipmap.round_skype));
+        srcSkypeOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_skype_gray));
     }
 
     public void facebookClick(){
@@ -228,8 +253,13 @@ public class ShareViewModel extends ViewModel {
 
     public void whatsAppClick(){whatsApp.setValue(!whatsApp.getValue());}
 
+    public void skypeClick(){
+        skype.setValue(!skype.getValue());
+        callback.twitterClick();
+    }
+
     public boolean[] getMediaToShare(){
-        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue(), twitter.getValue()};
+        return new boolean[]{facebook.getValue(), instagram.getValue(), contact.getValue(), email.getValue(), whatsApp.getValue(), twitter.getValue(), skype.getValue()};
     }
 
     public void next(){

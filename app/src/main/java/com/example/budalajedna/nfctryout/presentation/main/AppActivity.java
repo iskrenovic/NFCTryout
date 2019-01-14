@@ -115,16 +115,14 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         String userInfo = readWriteClient.read();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
-
-        /*if(userInfo.equals("")){
+        if(userInfo.equals("")){
             mainViewModel.setText("Dobrodoso u Handshake");
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.helloFragment).commitAllowingStateLoss();
         }
         else{
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame,this.shareFragment).commitAllowingStateLoss();
             shareFragment.setButtonStates(user.set(userInfo));
-        }*/
+        }
 
         facebook = new Facebook(this,this);
         TwitterHandler twitterHandler=new TwitterHandler();
