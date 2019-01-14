@@ -6,7 +6,9 @@
     <string name="secret_key">WypkLYxzipFGE0qSuBRu8W96pSpxF4JeVpYdqwzQbQ4ZnwrrUT</string>
     <string name="instagram_client"> ce56117cd2ee4bdc966006de3b279911</string>
     <string name="instagram_secret"> c138eb275d72469fa5e84f4c30223d16</string>
-    <string name="callback_url">mts.rs</string>
     <string name="auth_token">1082720754796560386-PKBbCN3KhcXgaumjWF06wApFKQBuyt</string>
     <string name="auth_token_secret">AF67uousBksoQw25nLdmjPdQOY8reEoaTDmwUHaHtt4sH</string>
+    <string name="callback_url">https://instagram.com/</string>
+    <string name="redirect_url">https://instagram.com/</string>
+    <string name="base_url">https://api.instagram.com/</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.budalajedna.nfctryout.presentation.main;
 
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
@@ -15,6 +16,8 @@ import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
 import com.example.budalajedna.nfctryout.datahandling.Facebook;
+import com.example.budalajedna.nfctryout.datahandling.Instagram;
+import com.example.budalajedna.nfctryout.datahandling.InstagramRequest;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.Skype;
@@ -24,8 +27,11 @@ import com.example.budalajedna.nfctryout.datahandling.Viber;
 import com.example.budalajedna.nfctryout.presentation.hello.HelloFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputEmailFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment.InstagramCallback;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InstagramAuthDialog;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.NewShareFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
@@ -39,7 +45,7 @@ import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback, InputEmailFragment.callback,
         InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,  AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback,
-        Facebook.FacebookCallback {
+        Facebook.FacebookCallback,InstagramCallback,InstagramAuthDialog.AuthenticationListener {
 
     private MainViewModel mainViewModel;
 
@@ -50,6 +56,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private SharedUser sharedUser;
 
     private Facebook facebook;
+    private Instagram instagram;
 
     private CallbackManager callbackManager;
 
@@ -63,6 +70,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private InputFacebookFragment inputFacebookFragment;
     private InputTwitterFragment inputTwitterFragment;
     private AllDoneFragment allDoneFragment;
+    private InputInstagramFragment inputInstagramFragment;
 
     private boolean[] mediaToShare;
     private final int mediaNumber = 6;
@@ -113,6 +121,9 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         user = new User(this);
         sharedUser = new SharedUser(this, this);
 
+        inputInstagramFragment = new InputInstagramFragment();
+        inputInstagramFragment.setInstagramCallback(this);
+
         String userInfo = readWriteClient.read();
 
         if(userInfo.equals("")){
@@ -126,7 +137,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         facebook = new Facebook(this,this);
         TwitterHandler twitterHandler=new TwitterHandler();
-
+        instagram=new Instagram();
         Skype skype=new Skype(this);
 
     }
@@ -320,6 +331,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         } catch (Exception e) {
             Log.d("ERROR", e.toString());
         }
+
     }
 
     @Override
@@ -333,4 +345,23 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         mainViewModel.setText(name +", sta zelis da delis?");
     }
 
+
+
+    @Override
+    public void onTokenReceived(String auth_token) {
+        if(auth_token!=null){
+            instagram.setAuthToken(auth_token);
+        }
+
+    }
+
+    @Override
+    public Activity getMainActivity() {
+        return this;
+    }
+
+    @Override
+    public InstagramAuthDialog.AuthenticationListener getAuthListener() {
+        return this;
+    }
 }
