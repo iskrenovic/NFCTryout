@@ -78,7 +78,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private final int mediaNumber = 7;
     private Animation animation;
 
-    private static final int PERMISSION_REQUEST = 1;
+    private static final int PERMISSION_REQUEST_WCONTACT = 1;
+    private static final int PERMISSION_REQUEST_RCONTACT = 2;
+    private static final int PERMISSION_REQUEST_EXSTORAGE = 3;
+    private static final int PERMISSION_REQUEST_LOCATION = 4;
+    private static final int PERMISSION_REQUEST = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,18 +96,18 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_CONTACTS},
-                    PERMISSION_REQUEST);
+                    PERMISSION_REQUEST_WCONTACT);
         }
 
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_CONTACTS},
-                    PERMISSION_REQUEST);
+                    PERMISSION_REQUEST_RCONTACT);
         }
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST);
+                    PERMISSION_REQUEST_EXSTORAGE);
         }
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
@@ -113,7 +117,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_WIFI_STATE},
-                    PERMISSION_REQUEST);
+                    PERMISSION_REQUEST_LOCATION);
         }
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.CHANGE_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
@@ -254,7 +258,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         for (int i = currentIndex; i < mediaNumber && !done; ++i) {
             if (mediaToShare[i]) {
                 Fragment fragment = getFragment(i);
-                if (!(fragment == null && !(mediaToShare[0]&& i==3))) {
+                if (fragment != null) {
                     currentIndex = i + 1;
                     doneTrue();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment).commitAllowingStateLoss();
@@ -432,6 +436,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public void userSaved() {
         disconnectWIFI();
+//        toastMaker("TRANSFER COMPLETE");
+    }
+
+    @Override
+    public void saveFailed() {
+        disconnectWIFI();
+//        toastMaker("TRANSFER FAILED");
     }
 
     @Override

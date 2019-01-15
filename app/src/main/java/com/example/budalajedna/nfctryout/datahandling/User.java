@@ -61,12 +61,12 @@ public class User {
         JSONObject object = new JSONObject();
         try {
             object.put("contactName", contactName);
-            object.put("profilePicture",profilePicture);
-            if(sPhone)object.put("phoneNumber", phoneNumber);
-            if(sEmail)object.put("email",email);
-            if(sFacebook)object.put("facebookId", facebookId);
-            if(sTwitter)object.put("twitterId", twitterId);
-            if(sSkype)object.put("skypeId", skypeId);
+            object.put("profilePicture", "");
+            object.put("phoneNumber", sPhone ? phoneNumber : "");
+            object.put("email", sEmail ? email : "");
+            object.put("facebookId", sFacebook ? facebookId : "");
+            object.put("twitterId", sTwitter ? twitterId : "");
+            object.put("skypeId", sSkype ? skypeId : "");
             object.put("sWhatsApp", sWhatsApp);
         }
         catch (Exception e){}

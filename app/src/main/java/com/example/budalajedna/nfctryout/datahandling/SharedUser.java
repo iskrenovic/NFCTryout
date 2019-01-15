@@ -17,6 +17,7 @@ public class SharedUser implements AddContact.ContactCallback{
     private MainCallback mainCallback;
 
     private TwitterHandler twitterHandler;
+    private Skype skype;
 
     public SharedUser(Callback callback, MainCallback mainCallback){
 
@@ -28,6 +29,7 @@ public class SharedUser implements AddContact.ContactCallback{
     public void save(String info){
 
         addContact = new AddContact(this);
+        skype = new Skype(mainCallback.getActivity());
 
         try {
             JSONObject object = new JSONObject(info);
@@ -35,10 +37,13 @@ public class SharedUser implements AddContact.ContactCallback{
             if(!object.getString("twitterId").equals("")) callback.openTwitterLink(twitterHandler.openUser(object.getString("twitterId")));
             //callback.openTwitterLink(twitterHandler.isFollowing(object.getString("twitterId")));
             if(object.getBoolean("sWhatsApp")) new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
+            skype.openSkypeChat(object.getString("skypeId"));
+
             callback.userSaved();
         }
         catch (Exception e){
             Log.d("TAG",e.toString());
+            callback.saveFailed();
         }
     }
 
@@ -51,5 +56,6 @@ public class SharedUser implements AddContact.ContactCallback{
         void addContact(ArrayList<ContentProviderOperation> operations);
         void openTwitterLink(Intent intent);
         void userSaved();
+        void saveFailed();
     }
 }
