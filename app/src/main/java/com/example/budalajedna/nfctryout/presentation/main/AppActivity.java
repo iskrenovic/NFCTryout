@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
-import com.example.budalajedna.nfctryout.datahandling.Instagram;
 import com.example.budalajedna.nfctryout.datahandling.InstagramRequest;
 import com.example.budalajedna.nfctryout.datahandling.PictureTransform;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
@@ -36,7 +35,6 @@ import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragme
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputSkypeFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
-import com.example.budalajedna.nfctryout.presentation.input.InstagramAuthDialog;
 import com.example.budalajedna.nfctryout.presentation.profile.ProfileFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
