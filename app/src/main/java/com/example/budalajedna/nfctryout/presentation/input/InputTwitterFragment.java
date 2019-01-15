@@ -78,7 +78,8 @@ public class InputTwitterFragment extends Fragment {
         twitterLoginButton.setCallback(new com.twitter.sdk.android.core.Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                callback.setTwitterUserID(result.data.getUserId() + "");
+                callback.setTwitterUserID(result.data.getUserId()+"");
+                callback.setTwitterUserName(result.data.getUserName());
                 /*TwitterSession session= TwitterCore.getInstance().getSessionManager().getActiveSession();
                 TwitterAuthToken authToken=session.getAuthToken();
                 String token=authToken.token;
@@ -106,8 +107,9 @@ public class InputTwitterFragment extends Fragment {
     }
 
     public interface Callback{
-        void setTwitterUserID(String userName);
+        void setTwitterUserID(String userID);
         void nextFragment();
+        void setTwitterUserName(String userName);
         void openIntent(Intent intent);
     }
 }

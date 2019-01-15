@@ -421,6 +421,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
+    public void setTwitterUserName(String userName) {
+        // postavi userName odavde
+    }
+
+    @Override
 
     public void nextField(String text) {
     }

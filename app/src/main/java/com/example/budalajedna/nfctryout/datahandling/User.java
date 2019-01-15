@@ -19,6 +19,7 @@ public class User {
     private boolean sFacebook = false;
 
     private String twitterId = "";
+    private String twitterUserName="";
     private boolean sTwitter = false;
 
     private String skypeId = "";
@@ -54,6 +55,7 @@ public class User {
             object.put("skypeId", skypeId);
             object.put("sWhatsApp", sWhatsApp);
             object.put("sInstagram", sInstagram);
+            object.put("twitterUserName",twitterUserName);
         }
         catch (Exception e){}
         return object.toString();
@@ -91,6 +93,7 @@ public class User {
             skypeId = object.getString("skypeId");
             sSkype = object.getBoolean("sSkype");
             sWhatsApp = object.getBoolean("sWhatsApp");
+            twitterUserName = object.getString("twitterUserName");
         }
         catch (Exception e){
             Log.d("PUSI","GA");
@@ -181,6 +184,8 @@ public class User {
     public void setInstagramUsername(String username) {
         this.instagramId=username;
     }
+
+    public void setTwitterUserName(String userName){this.twitterUserName=userName;}
 
     public interface Callback{
         void getUserName(String name);
