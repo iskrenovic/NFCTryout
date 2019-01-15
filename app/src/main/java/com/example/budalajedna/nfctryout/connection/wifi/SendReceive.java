@@ -33,7 +33,7 @@ public class SendReceive extends Thread {
     public void run() {
         while (!socket.isClosed()) {
             try {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[131072];
                 int bytes = 0;
                 if (!socket.isClosed()) {
                     bytes = inputStream.read(buffer);

@@ -1,14 +1,16 @@
 package com.example.budalajedna.nfctryout.presentation.main;
 
+import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
+import com.example.budalajedna.nfctryout.datahandling.PictureTransform;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
 import com.example.budalajedna.nfctryout.datahandling.User;
@@ -29,7 +32,9 @@ import com.example.budalajedna.nfctryout.presentation.input.InputFacebookFragmen
 import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragment.InstagramCallback;
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InputSkypeFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
+import com.example.budalajedna.nfctryout.presentation.profile.ProfileFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.facebook.AccessToken;
@@ -38,20 +43,24 @@ import java.util.ArrayList;
 
 public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback,
         InputEmailFragment.callback, InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,
-        AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback,InstagramCallback {
+        AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback,InstagramCallback,
+        InputSkypeFragment.Callback, ProfileFragment.Callback {
 
     private MainViewModel viewModel;
 
     private ImageButton backButton;
+    private ImageButton profileButton;
 
     private NFCManager nfcManager;
     private WifiManager wifiManager;
     private ReadWriteClient readWriteClient;
     private User user;
     private SharedUser sharedUser;
+    private PictureTransform pictureTransform;
 
     private HelloFragment helloFragment;
     private ShareFragment shareFragment;
+    private ProfileFragment profileFragment;
 
     private boolean newUser = false;
     private int currentIndex = 0;
@@ -59,6 +68,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     private InputPhoneNumberFragment inputPhoneNumberFragment;
     private InputEmailFragment inputEmailFragment;
+    private InputSkypeFragment inputSkypeFragment;
     private InputFacebookFragment inputFacebookFragment;
     private InputTwitterFragment inputTwitterFragment;
     private AllDoneFragment allDoneFragment;
@@ -67,6 +77,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private boolean[] mediaToShare;
     private final int mediaNumber = 7;
     private Animation animation;
+
+    private static final int PERMISSION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +89,57 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         viewModel = new MainViewModel();
 
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_CONTACTS},
+                    PERMISSION_REQUEST);
+        }
+
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    PERMISSION_REQUEST);
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST);
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSION_REQUEST);
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_WIFI_STATE},
+                    PERMISSION_REQUEST);
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.CHANGE_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CHANGE_WIFI_STATE},
+                    PERMISSION_REQUEST);
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.INTERNET)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.INTERNET},
+                    PERMISSION_REQUEST);
+        }
+
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getLastMediaFragment();
+            }
+        });
+
+        profileButton = findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentIndex = 1;
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, profileFragment).commitAllowingStateLoss();
             }
         });
 
@@ -96,11 +154,17 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         helloFragment = new HelloFragment();
         helloFragment.setCallbacks(this, this);
 
+        profileFragment = new ProfileFragment();
+        profileFragment.setCallback(this,this);
+
         inputPhoneNumberFragment = new InputPhoneNumberFragment();
         inputPhoneNumberFragment.setCallbacks(this, this);
 
         inputEmailFragment = new InputEmailFragment();
         inputEmailFragment.setCallbacks(this, this);
+
+        inputSkypeFragment = new InputSkypeFragment();
+        inputSkypeFragment.setCallback(this, this);
 
         inputFacebookFragment = new InputFacebookFragment();
         inputFacebookFragment.setCallback(this, this);
@@ -110,6 +174,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         allDoneFragment = new AllDoneFragment();
         allDoneFragment.setCallbacks(this, this);
+
+        pictureTransform = new PictureTransform();
 
         user = new User(this);
         sharedUser = new SharedUser(this, this);
@@ -188,31 +254,20 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         for (int i = currentIndex; i < mediaNumber && !done; ++i) {
             if (mediaToShare[i]) {
                 Fragment fragment = getFragment(i);
-                if (fragment == null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    final int finalI = i;
-                    builder.setMessage("Vec imate upisane ove informacije, da li zelite da ih promenite?")
-                            .setPositiveButton("Da", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    currentIndex = finalI;
-                                    doneTrue();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(finalI)).commitAllowingStateLoss();
-                                }
-                            })
-                            .setNegativeButton("Ne", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            }).show();
-                } else {
+                if (!(fragment == null && !(mediaToShare[0]&& i==3))) {
                     currentIndex = i + 1;
                     doneTrue();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment).commitAllowingStateLoss();
                 }
-
             }
+        }
+        if(currentIndex==0){
+            toastMaker("Sve je spremno za deljenje!");
+        }
+        if(!done) {
+            currentIndex = 0;
+            readWriteClient.save(user.read());
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
         }
     }
 
@@ -232,6 +287,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(i)).commitAllowingStateLoss();
                 }
             }
+            if(currentIndex==1) {
+                currentIndex = 0;
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
+            }
         }
     }
 
@@ -247,7 +306,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                 else return null;
             case 2:
                 if (user.getFacebookId().equals(""))  //SKYPE
-                    return inputEmailFragment;
+                    return inputSkypeFragment;
                 else return null;
 
             case 4:
@@ -308,6 +367,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public ReadWriteClient getReadWriteClient() {
         return readWriteClient;
+    }
+
+    @Override
+    public PictureTransform getPictureTransform() {
+        return pictureTransform;
     }
 
     @Override

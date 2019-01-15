@@ -23,8 +23,10 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
         } else if (!nfcAdapter.isEnabled()) {
             Toast.makeText(mainCallback.getActivity(), "Please enable NFC via Settings.", Toast.LENGTH_SHORT).show();
         }
-        nfcAdapter.setNdefPushMessageCallback(this,mainCallback.getActivity());
-        nfcAdapter.setOnNdefPushCompleteCallback(this,mainCallback.getActivity());
+        else {
+            nfcAdapter.setNdefPushMessageCallback(this, mainCallback.getActivity());
+            nfcAdapter.setOnNdefPushCompleteCallback(this, mainCallback.getActivity());
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.example.budalajedna.nfctryout.datahandling;
 
 import android.content.ContentProviderOperation;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 
@@ -31,13 +32,13 @@ public class SharedUser implements AddContact.ContactCallback{
         try {
             JSONObject object = new JSONObject(info);
             addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"), object.getString("profilePicture"));
-            callback.openTwitterLink(twitterHandler.openUser(object.getString("twitterId")));
+            if(!object.getString("twitterId").equals("")) callback.openTwitterLink(twitterHandler.openUser(object.getString("twitterId")));
             //callback.openTwitterLink(twitterHandler.isFollowing(object.getString("twitterId")));
-            new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
+            if(object.getBoolean("sWhatsApp")) new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
             callback.userSaved();
         }
         catch (Exception e){
-
+            Log.d("TAG",e.toString());
         }
     }
 

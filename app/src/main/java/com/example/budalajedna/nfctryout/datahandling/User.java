@@ -1,5 +1,7 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 public class User {
@@ -19,7 +21,10 @@ public class User {
     private String twitterId = "";
     private boolean sTwitter = false;
 
+    private String skypeId = "";
     private boolean sSkype = false;
+
+
     private boolean sWhatsApp = false;
     private boolean sInstagram = false;
 
@@ -43,6 +48,10 @@ public class User {
             object.put("sFacebook", sFacebook);
             object.put("twitterId", twitterId);
             object.put("sTwitter", sTwitter);
+            object.put("sSkype", sSkype);
+            object.put("skypeId", skypeId);
+            object.put("sWhatsApp", sWhatsApp);
+            object.put("sInstagram", sInstagram);
         }
         catch (Exception e){}
         return object.toString();
@@ -57,6 +66,8 @@ public class User {
             if(sEmail)object.put("email",email);
             if(sFacebook)object.put("facebookId", facebookId);
             if(sTwitter)object.put("twitterId", twitterId);
+            if(sSkype)object.put("skypeId", skypeId);
+            object.put("sWhatsApp", sWhatsApp);
         }
         catch (Exception e){}
         return object.toString();
@@ -68,15 +79,20 @@ public class User {
             JSONObject object = new JSONObject(info);
             contactName = object.getString("contactName");
             callback.getUserName(contactName);
-            object.put("profilePicture",profilePicture);
+            profilePicture = object.getString("profilePicture");
             phoneNumber = object.getString("phoneNumber");
             sPhone = object.getBoolean("sPhone");
             email = object.getString("email");
             sEmail = object.getBoolean("sEmail");
             twitterId = object.getString("twitterId");
             sTwitter = object.getBoolean("sTwitter");
+            skypeId = object.getString("skypeId");
+            sSkype = object.getBoolean("sSkype");
+            sWhatsApp = object.getBoolean("sWhatsApp");
         }
-        catch (Exception e){}
+        catch (Exception e){
+            Log.d("PUSI","GA");
+        }
         return getKnown();
     }
 
@@ -97,6 +113,14 @@ public class User {
     }
 
     public String getFacebookId(){return facebookId;}
+
+    public String getSkypeId() {
+        return skypeId;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
 
     public String getName() {
         return contactName;
@@ -140,6 +164,10 @@ public class User {
 
     public void setEmail(String email){
         this.email = email;
+    }
+
+    public void setSkypeId(String skypeId) {
+        this.skypeId = skypeId;
     }
 
     public void setTwitterId(String twitterId){

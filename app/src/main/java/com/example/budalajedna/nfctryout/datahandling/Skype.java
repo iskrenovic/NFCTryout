@@ -13,8 +13,7 @@ public class Skype {
     }
     public void openSkypeChat(String skypeUserName){
         Intent skype = new Intent("android.intent.action.VIEW");
-        skype.setData(Uri.parse("skype:" +skypeUserName+ "?chat"));
+        skype.setData(Uri.parse("skype:" + skypeUserName + "?chat"));
         main.startActivity(skype);
     }
-
 }

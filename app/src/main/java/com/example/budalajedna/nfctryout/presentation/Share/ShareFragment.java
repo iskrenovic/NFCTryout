@@ -60,13 +60,7 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
     }
 
     public void setButtonClicked(){
-        if(buttonStates[MediaType.phoneNumber.getValue()]) shareViewModel.contactClick();
-        if(buttonStates[MediaType.email.getValue()]) shareViewModel.emailClick();
-        if(buttonStates[MediaType.skype.getValue()]) shareViewModel.skypeClick();
-        if(buttonStates[MediaType.whatsapp.getValue()]) shareViewModel.whatsAppClick();
-        if(buttonStates[MediaType.twitter.getValue()]) shareViewModel.twitterClick();
-        if(buttonStates[MediaType.facebook.getValue()]) shareViewModel.facebookClick();
-        if(buttonStates[MediaType.instagram.getValue()]) shareViewModel.instagramClick();
+        shareViewModel.prepare(buttonStates);
 
     }
 

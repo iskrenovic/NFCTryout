@@ -226,6 +226,16 @@ public class ShareViewModel extends ViewModel {
         srcSkypeOff.setValue(fragment.getResources().getDrawable(R.mipmap.round_skype_gray));
     }
 
+    public void prepare(boolean[] button){
+        if(button[0]) contact.setValue(true);
+        if(button[1]) email.setValue(true);
+        if(button[2]) skype.setValue(true);
+        if(button[3]) whatsApp.setValue(true);
+        if(button[4]) twitter.setValue(true);
+        if(button[5]) facebook.setValue(true);
+        if(button[6]) instagram.setValue(true);
+    }
+
     public void facebookClick(){
         facebook.setValue(!facebook.getValue());
         callback.facebookClick();
