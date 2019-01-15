@@ -16,5 +16,6 @@ public class TwitterHandler {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://api.twitter.com/1.1/users/lookup.json?user_id="+userID));
         return intent;
+        // Not working
     }
 }

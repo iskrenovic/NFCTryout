@@ -25,8 +25,10 @@ public class User {
     private boolean sSkype = false;
 
 
-    private boolean sWhatsApp = false;
+    private String instagramId="";
     private boolean sInstagram = false;
+
+    private boolean sWhatsApp = false;
 
     private Callback callback;
 
@@ -175,6 +177,10 @@ public class User {
     }
 
     public void setFacebookId(String facebookId) {this.facebookId = facebookId;}
+
+    public void setInstagramUsername(String username) {
+        this.instagramId=username;
+    }
 
     public interface Callback{
         void getUserName(String name);

@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.connection.nfc.NFCManager;
 import com.example.budalajedna.nfctryout.connection.wifi.WifiManager;
+import com.example.budalajedna.nfctryout.datahandling.Instagram;
+import com.example.budalajedna.nfctryout.datahandling.InstagramRequest;
 import com.example.budalajedna.nfctryout.datahandling.PictureTransform;
 import com.example.budalajedna.nfctryout.datahandling.ReadWriteClient;
 import com.example.budalajedna.nfctryout.datahandling.SharedUser;
@@ -34,6 +36,7 @@ import com.example.budalajedna.nfctryout.presentation.input.InputInstagramFragme
 import com.example.budalajedna.nfctryout.presentation.input.InputPhoneNumberFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputSkypeFragment;
 import com.example.budalajedna.nfctryout.presentation.input.InputTwitterFragment;
+import com.example.budalajedna.nfctryout.presentation.input.InstagramAuthDialog;
 import com.example.budalajedna.nfctryout.presentation.profile.ProfileFragment;
 import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
@@ -44,7 +47,7 @@ import java.util.ArrayList;
 public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback,
         InputEmailFragment.callback, InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,
         AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback,InstagramCallback,
-        InputSkypeFragment.Callback, ProfileFragment.Callback {
+        InputSkypeFragment.Callback, ProfileFragment.Callback,InstagramRequest.SetInstagramUserCallback {
 
     private MainViewModel viewModel;
 
@@ -190,7 +193,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         String userInfo = readWriteClient.read();
 
         if (userInfo.equals("")) {
-            viewModel.setText("Dobrodoso u Handshake");
+            viewModel.setText("Dobrodosao u Handshake");
             newUser = true;
             currentIndex = -1;
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.helloFragment).commitAllowingStateLoss();
@@ -198,6 +201,8 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.shareFragment).commitAllowingStateLoss();
             shareFragment.setButtonStates(user.set(userInfo));
         }
+
+
     }
 
     @Override
@@ -481,17 +486,16 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
 
-
-
     @Override
     public Activity getMainActivity() {
         return this;
     }
 
     @Override
-    public void setAccesToken(AccessToken accesToken) {
-
+    public InstagramRequest.SetInstagramUserCallback getInstagramUserCallback() {
+        return this;
     }
+
 
     @Override
     public void editInfo() {
@@ -501,5 +505,15 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     @Override
     public void clickBack() {
         getLastMediaFragment();
+    }
+
+    @Override
+    public void setUsername(String username) {
+        user.setInstagramUsername(username);
+    }
+
+    @Override
+    public void setAccesToken(AccessToken accesToken) {
+
     }
 }

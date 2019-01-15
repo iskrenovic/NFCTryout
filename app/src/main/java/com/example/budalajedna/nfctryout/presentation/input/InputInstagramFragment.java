@@ -14,13 +14,15 @@ import android.widget.Button;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentInstagramBinding;
+import com.example.budalajedna.nfctryout.datahandling.Instagram;
+import com.example.budalajedna.nfctryout.datahandling.InstagramRequest;
 
-public class InputInstagramFragment extends Fragment implements InputInstagramViewModel.InstagramFragmentCallback {
+public class InputInstagramFragment extends Fragment implements InputInstagramViewModel.InstagramFragmentCallback,InstagramAuthDialog.AuthenticationListener {
 
     private FragmentInstagramBinding binding;
     private InputInstagramViewModel viewModel;
-    private Button instagramLogin;
     private InstagramCallback instagramCallback;
+    private Instagram instagram;
 
     @Nullable
     @Override
@@ -45,12 +47,21 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
 
     @Override
     public void onClickLogin() {
-        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(instagramCallback.getMainActivity());
+        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(instagramCallback.getMainActivity(),this);
         authenticationDialog.setCancelable(true);
         authenticationDialog.show();
     }
 
+    @Override
+    public void onTokenReceived(String auth_token) {
+        instagram=new Instagram(instagramCallback.getMainActivity(),instagramCallback.getInstagramUserCallback());
+        instagram.onTokenReceived(auth_token);
+    }
+
+    public Instagram getInstagram(){return this.instagram;}
+
     public interface InstagramCallback{
         Activity getMainActivity();
+        InstagramRequest.SetInstagramUserCallback getInstagramUserCallback();
     }
 }

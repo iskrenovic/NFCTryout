@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentItwitterBinding;
-import com.example.budalajedna.nfctryout.datahandling.TwitterHandler;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -80,7 +79,7 @@ public class InputTwitterFragment extends Fragment {
             @Override
             public void success(Result<TwitterSession> result) {
                 callback.setTwitterUserID(result.data.getUserId() + "");
-                TwitterSession session= TwitterCore.getInstance().getSessionManager().getActiveSession();
+                /*TwitterSession session= TwitterCore.getInstance().getSessionManager().getActiveSession();
                 TwitterAuthToken authToken=session.getAuthToken();
                 String token=authToken.token;
                 String auth=authToken.toString();
@@ -88,8 +87,8 @@ public class InputTwitterFragment extends Fragment {
 
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://api.twitter.com/oauth/authenticate?oauth_token="+R.string.auth_token));
-                callback.openIntent(intent);
+                intent.setData(Uri.parse("https://api.twitter.com/oauth/authenticate?oauth_token="+token));
+                callback.openIntent(intent);*/
                 callback.nextFragment();
             }
 

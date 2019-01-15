@@ -19,6 +19,7 @@ public class SharedUser implements AddContact.ContactCallback{
     private TwitterHandler twitterHandler;
     private Skype skype;
 
+
     public SharedUser(Callback callback, MainCallback mainCallback){
 
         this.callback = callback;

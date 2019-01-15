@@ -1,5 +1,6 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
@@ -16,10 +17,13 @@ import java.io.IOException;
 public class InstagramRequest extends AsyncTask<Void,String,String> {
 
     private String token;
+    private SetInstagramUserCallback setInstagramUserCallback;
     public void setToken(String token){
         this.token=token;
     }
-
+    public void setInstagramUserCallback(SetInstagramUserCallback setInstagramUserCallback){
+        this.setInstagramUserCallback=setInstagramUserCallback;
+    }
     @Override
     protected String doInBackground(Void... voids) {
         HttpClient httpClient = new DefaultHttpClient();
@@ -41,13 +45,16 @@ public class InstagramRequest extends AsyncTask<Void,String,String> {
             try{
                 JSONObject jsonObject=new JSONObject(response);
                 JSONObject jsonData=jsonObject.getJSONObject("data");
-                String userID=jsonData.getString("id");
                 String userName=jsonData.getString("username");
+                setInstagramUserCallback.setUsername(userName);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
 
+    }
+    public interface SetInstagramUserCallback{
+        void setUsername(String username);
     }
 }

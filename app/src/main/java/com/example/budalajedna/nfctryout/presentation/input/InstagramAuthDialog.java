@@ -1,5 +1,6 @@
 package com.example.budalajedna.nfctryout.presentation.input;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
@@ -9,16 +10,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.budalajedna.nfctryout.R;
-import com.example.budalajedna.nfctryout.datahandling.Instagram;
 
 public class InstagramAuthDialog extends Dialog {
     private final String redirect_url;
     private final String request_url;
+    private AuthenticationListener authenticationListener;
 
-    private Instagram instagram=new Instagram();
-
-    public InstagramAuthDialog(@NonNull Context context) {
+    public InstagramAuthDialog(@NonNull Context context,AuthenticationListener authenticationListener) {
         super(context);
+        this.authenticationListener=authenticationListener;
         this.redirect_url = context.getResources().getString(R.string.redirect_url);
         this.request_url = context.getResources().getString(R.string.base_url) +
                 "oauth/authorize/?client_id=" +
@@ -52,7 +52,7 @@ public class InstagramAuthDialog extends Dialog {
                     Uri uri = Uri.parse(url);
                     String access_token = uri.getEncodedFragment();
                     access_token = access_token.substring(access_token.lastIndexOf("=") + 1);
-                    instagram.onTokenReceived(access_token);
+                    authenticationListener.onTokenReceived(access_token);
                 }
             }
                 });
@@ -63,4 +63,5 @@ public class InstagramAuthDialog extends Dialog {
     public interface AuthenticationListener {
         void onTokenReceived(String auth_token);
     }
+
 }
