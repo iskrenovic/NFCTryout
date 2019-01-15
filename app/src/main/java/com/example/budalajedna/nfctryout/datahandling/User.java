@@ -1,7 +1,5 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 public class User {
@@ -96,7 +94,6 @@ public class User {
             twitterUserName = object.getString("twitterUserName");
         }
         catch (Exception e){
-            Log.d("PUSI","GA");
         }
         return getClicked();
     }

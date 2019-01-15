@@ -57,6 +57,18 @@ public class ProfileViewModel extends ViewModel {
         this.picture.setValue(picture);
     }
 
+    public void emailClick(){
+        callback.emailClick();
+    }
+
+    public void numberClick(){
+        callback.numberClick();
+    }
+
+    public void skypeClick(){
+        callback.skypeClick();
+    }
+
     public void textChanged(Editable editable){
         if(name.getValue()!=null) {
             if (!name.getValue().equals(editable.toString())) {
@@ -106,6 +118,9 @@ public class ProfileViewModel extends ViewModel {
 
     public interface Callback{
         void changePicture();
+        void emailClick();
+        void numberClick();
+        void skypeClick();
     }
 
 }

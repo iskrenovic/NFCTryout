@@ -519,4 +519,22 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     public void setAccesToken(AccessToken accesToken) {
 
     }
+
+    @Override
+    public void emailClick() {
+        currentIndex = 2;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputEmailFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void numberClick() {
+        currentIndex = 1;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputPhoneNumberFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void skypeClick() {
+        currentIndex = 3;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputSkypeFragment).commitAllowingStateLoss();
+    }
 }

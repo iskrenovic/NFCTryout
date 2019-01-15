@@ -87,7 +87,24 @@ public class ProfileFragment extends Fragment implements  ProfileViewModel.Callb
         startActivityForResult(Intent.createChooser(intent, "Izaberite profilu fotografiju"), PICK_IMAGE);
     }
 
-    public interface Callback {
+    @Override
+    public void emailClick() {
 
+    }
+
+    @Override
+    public void numberClick() {
+
+    }
+
+    @Override
+    public void skypeClick() {
+
+    }
+
+    public interface Callback {
+        void emailClick();
+        void numberClick();
+        void skypeClick();
     }
 }
