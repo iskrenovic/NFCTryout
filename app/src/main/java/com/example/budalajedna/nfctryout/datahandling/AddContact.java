@@ -1,15 +1,20 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
 import android.content.ContentProviderOperation;
+import android.graphics.Bitmap;
 import android.provider.ContactsContract;
 
+import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class AddContact{
     private ContactCallback callback;
-    public AddContact(ContactCallback callback) {
-
+    private PictureTransform pictureTransform;
+    public AddContact(ContactCallback callback, PictureTransform pictureTransform) {
         this.callback=callback;
+        this.pictureTransform = pictureTransform;
     }
 
     public void addContactInfo(String contactName, String phoneNumber, String mail, String profilePicture){
@@ -51,12 +56,17 @@ public class AddContact{
                     .build());
         }
 
+
         //PROFILE PICTURE
         if(!profilePicture.equals("")){
+            Bitmap photo = pictureTransform.decodeBitmapString(profilePicture);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100,stream);
+            byte[] profile = stream.toByteArray();
             operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                    .withValue(ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE,profilePicture)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE,profile)
                     .build());
         }
         callback.addContact(operations);

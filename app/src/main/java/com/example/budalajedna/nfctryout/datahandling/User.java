@@ -61,7 +61,7 @@ public class User {
         JSONObject object = new JSONObject();
         try {
             object.put("contactName", contactName);
-            object.put("profilePicture", "");
+            object.put("profilePicture", profilePicture);
             object.put("phoneNumber", sPhone ? phoneNumber : "");
             object.put("email", sEmail ? email : "");
             object.put("facebookId", sFacebook ? facebookId : "");
@@ -93,10 +93,10 @@ public class User {
         catch (Exception e){
             Log.d("PUSI","GA");
         }
-        return getKnown();
+        return getClicked();
     }
 
-    public boolean[] getKnown(){
+    public boolean[] getClicked(){
         return new boolean[] {sPhone,sEmail,sSkype, sWhatsApp, sTwitter, sFacebook, sInstagram};
     }
 

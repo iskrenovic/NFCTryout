@@ -57,11 +57,11 @@ public class ShareFragment extends Fragment implements ShareViewModel.Callback{
 
     public void setButtonStates(boolean[] buttonStates){
         this.buttonStates = buttonStates;
+        if(shareViewModel!=null) setButtonClicked();
     }
 
     public void setButtonClicked(){
         shareViewModel.prepare(buttonStates);
-
     }
 
     private boolean hasChanged(boolean[] mediaToShare){

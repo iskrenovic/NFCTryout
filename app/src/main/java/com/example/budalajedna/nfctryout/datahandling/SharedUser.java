@@ -28,7 +28,7 @@ public class SharedUser implements AddContact.ContactCallback{
 
     public void save(String info){
 
-        addContact = new AddContact(this);
+        addContact = new AddContact(this,mainCallback.getPictureTransform());
         skype = new Skype(mainCallback.getActivity());
 
         try {

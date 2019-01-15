@@ -12,7 +12,7 @@ public class PictureTransform {
 
     public String getBitmapString(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,10,byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,0,byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
 
         return Base64.encodeToString(bytes,Base64.DEFAULT);

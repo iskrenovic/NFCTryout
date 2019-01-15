@@ -272,6 +272,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             currentIndex = 0;
             readWriteClient.save(user.read());
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
+            shareFragment.setButtonStates(user.getClicked());
         }
     }
 
@@ -294,6 +295,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             if(currentIndex==1) {
                 currentIndex = 0;
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
+                shareFragment.setButtonStates(user.getClicked());
             }
         }
     }
@@ -309,7 +311,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                     return inputEmailFragment;
                 else return null;
             case 2:
-                if (user.getFacebookId().equals(""))  //SKYPE
+                if (user.getSkypeId().equals(""))  //SKYPE
                     return inputSkypeFragment;
                 else return null;
 
@@ -382,7 +384,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     public void nextAllDone() {
         readWriteClient.save(user.read());
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.shareFragment).commitAllowingStateLoss();
-        shareFragment.setButtonStates(user.getKnown());
+        shareFragment.setButtonStates(user.getClicked());
     }
 
     @Override
@@ -429,7 +431,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         try {
             this.getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
         } catch (Exception e) {
-            toastMaker(e.toString());
         }
     }
 
