@@ -19,7 +19,9 @@ public class InputEmailFragment extends Fragment implements InputEmailViewModel.
     private FragmentIemailBinding binding;
     private InputEmailViewModel viewModel;
 
-    private MainCallback userCallback;
+    private boolean edit;
+
+    private MainCallback mainCallback;
     private callback callback;
 
     @Nullable
@@ -36,23 +38,29 @@ public class InputEmailFragment extends Fragment implements InputEmailViewModel.
 
         viewModel.setCallback(this);
 
+        if(edit) viewModel.setEmail(mainCallback.getUser().getEmail());
+
         binding.setVm(this.viewModel);
 
         return view;
     }
 
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
     public void setCallbacks(MainCallback userCallback, callback callback){
-        this.userCallback = userCallback;
+        this.mainCallback = userCallback;
         this.callback = callback;
     }
 
     @Override
     public void nextFragment(String email) {
-        userCallback.getUser().setEmail(email);
-        callback.nextFragment();
+        mainCallback.getUser().setEmail(email);
+        callback.nextFragment(edit);
 
     }
     public interface callback{
-        void nextFragment();
+        void nextFragment(boolean edit);
     }
 }

@@ -22,6 +22,8 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
     private Callback callback;
     private MainCallback mainCallback;
 
+    private boolean edit;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -34,9 +36,15 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
 
         viewModel.setCallback(this);
 
+        if(edit) viewModel.setPhoneNumber(mainCallback.getUser().getPhoneNumber());
+
         binding.setVm(this.viewModel);
 
         return this.binding.getRoot();
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
     }
 
     public void setCallbacks(Callback callback, MainCallback mainCallback){
@@ -48,7 +56,7 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
     public void nextFragment(String phoneNumber) {
         if(phoneNumber!=null) {
             mainCallback.getUser().setPhoneNumber(phoneNumber);
-            callback.nextFragment();
+            callback.nextFragment(edit);
         }
     }
 
@@ -58,7 +66,7 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
     }
 
     public interface Callback{
-        void nextFragment();
+        void nextFragment(boolean edit);
         void nextField(String text);
     }
 }

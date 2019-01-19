@@ -29,6 +29,10 @@ public class InputSkypeViewModel extends ViewModel {
         }
     }
 
+    public void setUsername(String username) {
+        this.username.setValue(username);
+    }
+
     public void nextFragment(){
         if(username.getValue()!=null){
             callback.nextFragment(username.getValue());

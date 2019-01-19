@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +63,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private ProfileFragment profileFragment;
 
     private boolean newUser = false;
+
+    /*currentIndex -2 - mediaNumber
+    * -2 - edit
+    * -1 - Welcome
+    *  0 - ShareFragment
+    *  1-7 - Fragments*/
     private int currentIndex = 0;
     private boolean done;
 
@@ -79,11 +84,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     private final int mediaNumber = 7;
     private Animation animation;
 
-    private static final int PERMISSION_REQUEST_WCONTACT = 1;
-    private static final int PERMISSION_REQUEST_RCONTACT = 2;
-    private static final int PERMISSION_REQUEST_EXSTORAGE = 3;
-    private static final int PERMISSION_REQUEST_LOCATION = 4;
-    private static final int PERMISSION_REQUEST = 5;
+    private static final int PERMISSION_ALL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,48 +95,25 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
         viewModel = new MainViewModel();
 
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_CONTACTS},
-                    PERMISSION_REQUEST_WCONTACT);
-        }
+        String[] permissions = {
+                Manifest.permission.WRITE_CONTACTS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.INTERNET
+        };
 
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    PERMISSION_REQUEST_RCONTACT);
-        }
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_EXSTORAGE);
-        }
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    PERMISSION_REQUEST);
-        }
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_WIFI_STATE},
-                    PERMISSION_REQUEST_LOCATION);
-        }
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.CHANGE_WIFI_STATE)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CHANGE_WIFI_STATE},
-                    PERMISSION_REQUEST);
-        }
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.INTERNET)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.INTERNET},
-                    PERMISSION_REQUEST);
+        if (!hasPermissions(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_ALL);
         }
 
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLastMediaFragment();
+                goBack();
             }
         });
 
@@ -160,7 +138,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         helloFragment.setCallbacks(this, this);
 
         profileFragment = new ProfileFragment();
-        profileFragment.setCallback(this,this);
+        profileFragment.setCallback(this, this);
 
         inputPhoneNumberFragment = new InputPhoneNumberFragment();
         inputPhoneNumberFragment.setCallbacks(this, this);
@@ -228,9 +206,41 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     @Override
     public void onBackPressed() {
-        if((currentIndex==0&&!newUser)||currentIndex==-1) super.onBackPressed();
-        getLastMediaFragment();
+        if ((currentIndex == 0 && !newUser) || currentIndex == -1) super.onBackPressed();
+        goBack();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        super.onNewIntent(intent);
+    }
+
+    private boolean hasPermissions(String[] permissions) {
+        if (permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void goBack(){
+        switch (currentIndex){
+            case -2:
+                currentIndex = 1;
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, profileFragment).commitAllowingStateLoss();
+                break;
+            case 1:
+                currentIndex = 0;
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
+                break;
+            default:
+                getLastMediaFragment();
+                break;
+        }
     }
 
     private void disconnectWIFI() {
@@ -241,16 +251,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            /*wifiManager.connect(nfcManager.getTextFromBeam(intent));*/
-        }
-
-        super.onNewIntent(intent);
-    }
 
     public void toastMaker(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
@@ -268,10 +268,10 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
                 }
             }
         }
-        if(currentIndex==0){
+        if (currentIndex == 0) {
             toastMaker("Sve je spremno za deljenje!");
         }
-        if(!done) {
+        if (!done) {
             currentIndex = 0;
             readWriteClient.save(user.read());
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
@@ -279,23 +279,22 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         }
     }
 
-    private void doneTrue(){
+    private void doneTrue() {
         done = true;
     }
 
-    private void getLastMediaFragment(){
-        if(currentIndex==0 && newUser){
+    private void getLastMediaFragment() {
+        if (currentIndex == 0 && newUser) {
             currentIndex = -1;
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, helloFragment).commitAllowingStateLoss();
-        }
-        else if(currentIndex != 0){
+        } else if (currentIndex != 0) {
             for (int i = currentIndex - 1; i > 0; --i) {
-                if(mediaToShare[i]){
+                if (mediaToShare[i]) {
                     currentIndex = i;
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, getEditFragment(i)).commitAllowingStateLoss();
                 }
             }
-            if(currentIndex==1) {
+            if (currentIndex == 1) {
                 currentIndex = 0;
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, shareFragment).commitAllowingStateLoss();
                 shareFragment.setButtonStates(user.getClicked());
@@ -305,17 +304,24 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     private Fragment getFragment(int index) {
         switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
-            case 0: case 3:
-                if (user.getPhoneNumber().equals("")) //PHONE NUMBER
+            case 0:
+            case 3:
+                if (user.getPhoneNumber().equals("")) { //PHONE NUMBER
+                    inputPhoneNumberFragment.setEdit(false);
                     return inputPhoneNumberFragment;
+                }
                 else return null;
             case 1:
-                if (user.getEmail().equals(""))  //EMAIL
+                if (user.getEmail().equals("")) { //EMAIL
+                    inputEmailFragment.setEdit(false);
                     return inputEmailFragment;
+                }
                 else return null;
             case 2:
-                if (user.getSkypeId().equals(""))  //SKYPE
+                if (user.getSkypeId().equals("")) { //SKYPE
+                    inputSkypeFragment.setEdit(false);
                     return inputSkypeFragment;
+                }
                 else return null;
 
             case 4:
@@ -339,16 +345,17 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     private Fragment getEditFragment(int index) {
         switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
-            case 0: case 4:
-                    return inputPhoneNumberFragment;  //phone i whatsApp
+            case 0:
+            case 4:
+                return inputPhoneNumberFragment;  //phone i whatsApp
             case 1:
-                    return inputEmailFragment;  //email
+                return inputEmailFragment;  //email
             case 2:
-                    return inputEmailFragment;  //skype
+                return inputEmailFragment;  //skype
             case 5:
-                    return inputTwitterFragment;    //twitter
+                return inputTwitterFragment;    //twitter
             case 6:
-                    return inputFacebookFragment; //facebook
+                return inputFacebookFragment; //facebook
             case 7:
                 return inputInstagramFragment;  //INSTAGRAM
             default:
@@ -414,13 +421,23 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
+    public void nextFragment(boolean edit) {
+        if(edit) {
+            currentIndex = 1;
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, profileFragment).commitAllowingStateLoss();
+        }
+        else
+            getNextMediaFragment();
+    }
+
+    @Override
     public void nextFragment() {
         getNextMediaFragment();
     }
 
     @Override
     public void setTwitterUserName(String userName) {
-        // postavi userName odavde
+        user.setTwitterUserName(userName);
     }
 
     @Override
@@ -522,19 +539,22 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
 
     @Override
     public void emailClick() {
-        currentIndex = 2;
+        currentIndex = -2;
+        inputEmailFragment.setEdit(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputEmailFragment).commitAllowingStateLoss();
     }
 
     @Override
     public void numberClick() {
-        currentIndex = 1;
+        currentIndex = -2;
+        inputPhoneNumberFragment.setEdit(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputPhoneNumberFragment).commitAllowingStateLoss();
     }
 
     @Override
     public void skypeClick() {
-        currentIndex = 3;
+        currentIndex = -2;
+        inputSkypeFragment.setEdit(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputSkypeFragment).commitAllowingStateLoss();
     }
 }

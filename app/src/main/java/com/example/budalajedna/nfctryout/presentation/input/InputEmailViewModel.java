@@ -30,6 +30,10 @@ public class InputEmailViewModel extends ViewModel {
         }
     }
 
+    public void setEmail(String email) {
+        this.email.setValue(email);
+    }
+
     public void nextFragment(){
         if(email.getValue()!=null){
             callback.nextFragment(email.getValue());

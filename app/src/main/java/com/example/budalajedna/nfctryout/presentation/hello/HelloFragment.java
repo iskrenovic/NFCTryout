@@ -47,6 +47,7 @@ public class HelloFragment extends Fragment implements HelloViewModel.Callback{
         viewModel.setPicture(getResources().getDrawable(R.drawable.ic_profile));
         binding.setVm(this.viewModel);
         viewModel.setName(mainCallback.getUser().getName());
+        viewModel.init(getResources(),mainCallback.getUser(),mainCallback.getPictureTransform());
         return this.binding.getRoot();
     }
 

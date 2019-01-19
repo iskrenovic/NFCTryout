@@ -26,6 +26,10 @@ public class InputPhoneNumberViewModel extends ViewModel {
         }
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber.setValue(phoneNumber);
+    }
+
     public LiveData<String> getPhoneNumber() {
         return phoneNumber;
     }

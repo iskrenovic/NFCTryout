@@ -22,6 +22,8 @@ public class InputSkypeFragment extends Fragment implements InputSkypeViewModel.
     private Callback callback;
     private MainCallback mainCallback;
 
+    private boolean edit;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class InputSkypeFragment extends Fragment implements InputSkypeViewModel.
         binding.setLifecycleOwner(this);
         viewModel = ViewModelProviders.of(this).get(InputSkypeViewModel.class);
         viewModel.setCallback(this);
+        if(edit) viewModel.setUsername(mainCallback.getUser().getSkypeId());
         binding.setVm(this.viewModel);
         return view;
     }
@@ -39,13 +42,18 @@ public class InputSkypeFragment extends Fragment implements InputSkypeViewModel.
         this.mainCallback = mainCallback;
     }
 
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+
+    }
+
     @Override
     public void nextFragment(String username) {
         mainCallback.getUser().setSkypeId(username);
-        callback.nextFragment();
+        callback.nextFragment(edit);
     }
 
     public interface Callback{
-        void nextFragment();
+        void nextFragment(boolean edit);
     }
 }

@@ -3,11 +3,15 @@ package com.example.budalajedna.nfctryout.presentation.hello;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
 
 import com.example.budalajedna.nfctryout.R;
+import com.example.budalajedna.nfctryout.datahandling.PictureTransform;
+import com.example.budalajedna.nfctryout.datahandling.User;
 
 public class HelloViewModel extends ViewModel {
 
@@ -34,6 +38,14 @@ public class HelloViewModel extends ViewModel {
         else {
             name.setValue(editable.toString());
         }
+    }
+
+    public void init(Resources resources, User user, PictureTransform pictureTransform){
+        name.setValue(user.getName());
+        if(user.getProfilePicture().equals(""))
+            picture.setValue(resources.getDrawable(R.drawable.ic_profile));
+        else
+            picture.setValue(new BitmapDrawable(resources,pictureTransform.decodeBitmapString(user.getProfilePicture())));
     }
 
     public LiveData<String> getName() {

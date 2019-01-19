@@ -89,17 +89,17 @@ public class ProfileFragment extends Fragment implements  ProfileViewModel.Callb
 
     @Override
     public void emailClick() {
-
+        callback.emailClick();
     }
 
     @Override
     public void numberClick() {
-
+        callback.numberClick();
     }
 
     @Override
     public void skypeClick() {
-
+        callback.skypeClick();
     }
 
     public interface Callback {
