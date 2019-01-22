@@ -52,8 +52,10 @@ public class User {
             object.put("sSkype", sSkype);
             object.put("skypeId", skypeId);
             object.put("sWhatsApp", sWhatsApp);
+            object.put("instagramUsername",instagramUsername);
             object.put("sInstagram", sInstagram);
             object.put("twitterUserName",twitterUserName);
+
         }
         catch (Exception e){}
         return object.toString();
@@ -69,6 +71,7 @@ public class User {
             object.put("facebookId", sFacebook ? facebookId : "");
             object.put("twitterId", sTwitter ? twitterId : "");
             object.put("skypeId", sSkype ? skypeId : "");
+            object.put("instagramUsername", sInstagram ? instagramUsername : "");
             object.put("sWhatsApp", sWhatsApp);
         }
         catch (Exception e){}
@@ -92,6 +95,8 @@ public class User {
             sSkype = object.getBoolean("sSkype");
             sWhatsApp = object.getBoolean("sWhatsApp");
             twitterUserName = object.getString("twitterUserName");
+            sInstagram = object.getBoolean("sInstagram");
+            instagramUsername = object.getString("instagramUsername");
         }
         catch (Exception e){
         }

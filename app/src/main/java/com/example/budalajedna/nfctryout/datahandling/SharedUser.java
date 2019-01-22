@@ -18,6 +18,7 @@ public class SharedUser implements AddContact.ContactCallback{
 
     private TwitterHandler twitterHandler;
     private Skype skype;
+    private Instagram instagram;
 
 
     public SharedUser(Callback callback, MainCallback mainCallback){
@@ -25,6 +26,7 @@ public class SharedUser implements AddContact.ContactCallback{
         this.callback = callback;
         this.mainCallback = mainCallback;
         twitterHandler = new TwitterHandler();
+        instagram = new Instagram();
     }
 
     public void save(String info){
@@ -35,9 +37,10 @@ public class SharedUser implements AddContact.ContactCallback{
         try {
             JSONObject object = new JSONObject(info);
             addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"), object.getString("profilePicture"));
-            if(!object.getString("twitterId").equals("")) callback.openTwitterLink(twitterHandler.openUser(object.getString("twitterId")));
-            //callback.openTwitterLink(twitterHandler.isFollowing(object.getString("twitterId")));
+            if(!object.getString("twitterId").equals("")) callback.openIntent(twitterHandler.openUser(object.getString("twitterId")));
+            //callback.openIntent(twitterHandler.isFollowing(object.getString("twitterId")));
             if(object.getBoolean("sWhatsApp")) new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
+            if(!object.getString("instagramUsername").equals("")) callback.openIntent(instagram.openAccount(object.getString("instagramUsername")));
             skype.openSkypeChat(object.getString("skypeId"));
 
             callback.userSaved();
@@ -55,7 +58,7 @@ public class SharedUser implements AddContact.ContactCallback{
 
     public interface Callback {
         void addContact(ArrayList<ContentProviderOperation> operations);
-        void openTwitterLink(Intent intent);
+        void openIntent(Intent intent);
         void userSaved();
         void saveFailed();
     }

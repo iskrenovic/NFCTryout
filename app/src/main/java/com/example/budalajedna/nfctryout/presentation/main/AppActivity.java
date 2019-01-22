@@ -489,7 +489,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
-    public void openTwitterLink(Intent intent) {
+    public void openIntent(Intent intent) {
         startActivity(intent);
     }
 

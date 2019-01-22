@@ -13,6 +13,10 @@ public class Instagram {
         this.setInstagramUserCallback=setInstagramUserCallback;
     }
 
+    public Instagram(){
+
+    }
+
     public void onTokenReceived(String auth_token) {
         this.authToken=authToken;
         InstagramRequest instagramRequest=new InstagramRequest();
@@ -21,10 +25,9 @@ public class Instagram {
         instagramRequest.execute();
     }
 
-    public void openAccount(String userName){
+    public Intent openAccount(String userName){
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://instagram.com/"+userName));
-
-
+        return intent;
     }
 }
