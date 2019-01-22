@@ -130,6 +130,29 @@
             app:layout_constraintStart_toEndOf="@+id/skypeIcon"
             app:layout_constraintTop_toTopOf="@+id/skypeIcon" />
 
+        <ImageView
+            android:id="@+id/instagramIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:onClick="@{()->vm.instagramClick()}"
+            android:scaleType="fitXY"
+            android:src="@mipmap/round_instagram"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/skypeIcon" />
+
+        <TextView
+            android:id="@+id/instagramText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{vm.instagramId}"
+            android:onClick="@{()->vm.instagramClick()}"
+            app:layout_constraintBottom_toBottomOf="@+id/instagramIcon"
+            app:layout_constraintStart_toEndOf="@+id/instagramIcon"
+            app:layout_constraintTop_toTopOf="@+id/instagramIcon" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

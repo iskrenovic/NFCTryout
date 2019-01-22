@@ -102,9 +102,15 @@ public class ProfileFragment extends Fragment implements  ProfileViewModel.Callb
         callback.skypeClick();
     }
 
+    @Override
+    public void instagramClick() {
+        callback.instagramClick();
+    }
+
     public interface Callback {
         void emailClick();
         void numberClick();
         void skypeClick();
+        void instagramClick();
     }
 }

@@ -24,7 +24,7 @@ public class User {
     private boolean sSkype = false;
 
 
-    private String instagramId="";
+    private String instagramUsername ="";
     private boolean sInstagram = false;
 
     private boolean sWhatsApp = false;
@@ -124,6 +124,10 @@ public class User {
         return profilePicture;
     }
 
+    public String getInstagramUsername() {
+        return instagramUsername;
+    }
+
     public String getName() {
         return contactName;
     }
@@ -179,7 +183,7 @@ public class User {
     public void setFacebookId(String facebookId) {this.facebookId = facebookId;}
 
     public void setInstagramUsername(String username) {
-        this.instagramId=username;
+        this.instagramUsername =username;
     }
 
     public void setTwitterUserName(String userName){this.twitterUserName=userName;}

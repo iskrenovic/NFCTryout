@@ -47,6 +47,7 @@ public class ProfileViewModel extends ViewModel {
         skypeId.setValue(user.getSkypeId());
         twitterId.setValue(user.getTwitterId());
         facebookId.setValue(user.getFacebookId());
+        instagramId.setValue("@" + user.getInstagramUsername());
     }
 
     public void setCallback(Callback callback) {
@@ -68,6 +69,8 @@ public class ProfileViewModel extends ViewModel {
     public void skypeClick(){
         callback.skypeClick();
     }
+
+    public void instagramClick(){ callback.instagramClick();}
 
     public void textChanged(Editable editable){
         if(name.getValue()!=null) {
@@ -121,6 +124,7 @@ public class ProfileViewModel extends ViewModel {
         void emailClick();
         void numberClick();
         void skypeClick();
+        void instagramClick();
     }
 
 }

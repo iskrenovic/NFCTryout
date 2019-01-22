@@ -68,7 +68,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     * -2 - edit
     * -1 - Welcome
     *  0 - ShareFragment
-    *  1-7 - Fragments*/
+    *  1-8 - Fragments*/
     private int currentIndex = 0;
     private boolean done;
 
@@ -164,7 +164,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         sharedUser = new SharedUser(this, this);
 
         inputInstagramFragment = new InputInstagramFragment();
-        inputInstagramFragment.setInstagramCallback(this);
+        inputInstagramFragment.setCallback(this,this);
 
         String userInfo = readWriteClient.read();
 
@@ -344,7 +344,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     private Fragment getEditFragment(int index) {
-        switch (index) { //OSNOVA INDEXA SE NALAZI U MEDIA TYPE
+        switch (index) {
             case 0:
             case 4:
                 return inputPhoneNumberFragment;  //phone i whatsApp
@@ -440,12 +440,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         user.setTwitterUserName(userName);
     }
 
-    @Override
-
-    public void nextField(String text) {
-    }
-
-
     public void openIntent(Intent intent) {
         startActivity(intent);
     }
@@ -516,12 +510,6 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         return this;
     }
 
-
-    @Override
-    public void editInfo() {
-
-    }
-
     @Override
     public void clickBack() {
         getLastMediaFragment();
@@ -556,5 +544,12 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         currentIndex = -2;
         inputSkypeFragment.setEdit(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputSkypeFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void instagramClick() {
+        currentIndex = -2;
+        inputInstagramFragment.setEdit(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputInstagramFragment).commitAllowingStateLoss();
     }
 }

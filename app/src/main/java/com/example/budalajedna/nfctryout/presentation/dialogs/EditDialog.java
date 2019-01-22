@@ -17,6 +17,6 @@ public class EditDialog extends DialogFragment {
     }
 
     public interface Callback{
-        void editInfo();
+
     }
 }

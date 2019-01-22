@@ -60,13 +60,7 @@ public class InputPhoneNumberFragment extends Fragment implements InputPhoneNumb
         }
     }
 
-    @Override
-    public void emptyPhone() {
-        callback.nextField("Upišite broj telefona...");
-    }
-
     public interface Callback{
         void nextFragment(boolean edit);
-        void nextField(String text);
     }
 }

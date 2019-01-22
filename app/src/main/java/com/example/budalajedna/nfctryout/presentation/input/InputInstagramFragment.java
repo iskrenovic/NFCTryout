@@ -10,19 +10,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.budalajedna.nfctryout.R;
 import com.example.budalajedna.nfctryout.databinding.FragmentInstagramBinding;
 import com.example.budalajedna.nfctryout.datahandling.Instagram;
 import com.example.budalajedna.nfctryout.datahandling.InstagramRequest;
+import com.example.budalajedna.nfctryout.presentation.main.MainCallback;
 
-public class InputInstagramFragment extends Fragment implements InputInstagramViewModel.InstagramFragmentCallback,InstagramAuthDialog.AuthenticationListener {
+public class InputInstagramFragment extends Fragment implements InputInstagramViewModel.Callback,InstagramAuthDialog.AuthenticationListener {
 
     private FragmentInstagramBinding binding;
     private InputInstagramViewModel viewModel;
-    private InstagramCallback instagramCallback;
+    private InstagramCallback callback;
     private Instagram instagram;
+
+    private MainCallback mainCallback;
+
+    private boolean edit;
 
     @Nullable
     @Override
@@ -34,27 +38,38 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
         binding.setLifecycleOwner(this);
 
         viewModel = ViewModelProviders.of(this).get(InputInstagramViewModel.class);
-        viewModel.setInstagramFragmentCallback(this);
+        viewModel.setCallback(this);
 
         binding.setVm(this.viewModel);
 
         return  view;
     }
 
-    public void setInstagramCallback(InstagramCallback instagramCallback){
-        this.instagramCallback=instagramCallback;
+    public void setCallback(InstagramCallback callback, MainCallback mainCallback){
+        this.callback = callback;
+        this.mainCallback = mainCallback;
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
     }
 
     @Override
     public void onClickLogin() {
-        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(instagramCallback.getMainActivity(),this);
+        InstagramAuthDialog authenticationDialog = new InstagramAuthDialog(callback.getMainActivity(),this);
         authenticationDialog.setCancelable(true);
         authenticationDialog.show();
     }
 
     @Override
+    public void nextFragment(String username) {
+        mainCallback.getUser().setInstagramUsername(username);
+        callback.nextFragment(edit);
+    }
+
+    @Override
     public void onTokenReceived(String auth_token) {
-        instagram=new Instagram(instagramCallback.getMainActivity(),instagramCallback.getInstagramUserCallback());
+        instagram=new Instagram(callback.getMainActivity(), callback.getInstagramUserCallback());
         instagram.onTokenReceived(auth_token);
     }
 
@@ -63,5 +78,6 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
     public interface InstagramCallback{
         Activity getMainActivity();
         InstagramRequest.SetInstagramUserCallback getInstagramUserCallback();
+        void nextFragment(boolean edit);
     }
 }
