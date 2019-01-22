@@ -3,6 +3,7 @@ package com.example.budalajedna.nfctryout.presentation.main;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
@@ -39,9 +40,10 @@ import com.example.budalajedna.nfctryout.presentation.setup.AllDoneFragment;
 import com.example.budalajedna.nfctryout.presentation.share.ShareFragment;
 import com.facebook.AccessToken;
 
+
 import java.util.ArrayList;
 
-public class AppActivity extends AppCompatActivity implements MainCallback,User.Callback,HelloFragment.Callback, ShareFragment.Callback,
+public class AppActivity extends AppCompatActivity implements MainCallback, NFCManager.Callback,User.Callback,HelloFragment.Callback, ShareFragment.Callback,
         InputEmailFragment.callback, InputPhoneNumberFragment.Callback, InputFacebookFragment.Callback, InputTwitterFragment.Callback,
         AllDoneFragment.Callback, SharedUser.Callback, WifiManager.Callback, EditDialog.Callback, MainViewModel.Callback,InstagramCallback,
         InputSkypeFragment.Callback, ProfileFragment.Callback,InstagramRequest.SetInstagramUserCallback {
@@ -109,6 +111,13 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_ALL);
         }
 
+        android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if(!wifi.isWifiEnabled()){
+            toastMaker("Turn Wi-Fi on.");
+            startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+        }
+
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +135,9 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
             }
         });
 
-        nfcManager = new NFCManager(this);
+
+
+        nfcManager = new NFCManager(this, this);
         wifiManager = new WifiManager(this, this, this);
 
         readWriteClient = new ReadWriteClient(this);
@@ -557,5 +568,16 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     public void twitterClick() {
         currentIndex = -2;
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputTwitterFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void nfcNotON() {
+        toastMaker("Turn NFC on");
+        startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
+    }
+
+    @Override
+    public void noNFC() {
+        toastMaker("NFC isn't supported");
     }
 }

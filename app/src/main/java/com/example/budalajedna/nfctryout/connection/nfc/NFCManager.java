@@ -15,13 +15,16 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     private NfcAdapter nfcAdapter;
     private MainCallback mainCallback;
 
-    public NFCManager(MainCallback mainCallback) {
+    private Callback callback;
+
+    public NFCManager(MainCallback mainCallback, Callback callback) {
         this.mainCallback = mainCallback;
+        this.callback = callback;
         nfcAdapter = NfcAdapter.getDefaultAdapter(mainCallback.getActivity());
         if (nfcAdapter == null) {
-            Toast.makeText(mainCallback.getActivity(), "No NFC supported on this device.", Toast.LENGTH_SHORT).show();
+            callback.noNFC();
         } else if (!nfcAdapter.isEnabled()) {
-            Toast.makeText(mainCallback.getActivity(), "Please enable NFC via Settings.", Toast.LENGTH_SHORT).show();
+            callback.nfcNotON();
         }
         else {
             nfcAdapter.setNdefPushMessageCallback(this, mainCallback.getActivity());
@@ -59,5 +62,10 @@ public class NFCManager implements NfcAdapter.CreateNdefMessageCallback, NfcAdap
     @Override
     public void onNdefPushComplete(NfcEvent event) {
 
+    }
+
+    public interface Callback{
+        void nfcNotON();
+        void noNFC();
     }
 }
