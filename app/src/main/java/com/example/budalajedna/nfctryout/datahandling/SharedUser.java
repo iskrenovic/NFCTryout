@@ -37,10 +37,10 @@ public class SharedUser implements AddContact.ContactCallback{
         try {
             JSONObject object = new JSONObject(info);
             addContact.addContactInfo(object.getString("contactName"),object.getString("phoneNumber"),object.getString("email"), object.getString("profilePicture"));
-            if(!object.getString("twitterId").equals("")) callback.openIntent(twitterHandler.openUser(object.getString("twitterId")));
-            //callback.openIntent(twitterHandler.isFollowing(object.getString("twitterId")));
-            if(object.getBoolean("sWhatsApp")) new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
-            if(!object.getString("instagramUsername").equals("")) callback.openIntent(instagram.openAccount(object.getString("instagramUsername")));
+            if(!object.getString("twitterId").equals("")) callback.runSocialIntent(twitterHandler.openUser(object.getString("twitterId")));
+            //callback.runIntent(twitterHandler.isFollowing(object.getString("twitterId")));
+            if(object.getBoolean("whatsApp")) new WhatsApp(mainCallback.getActivity(),object.getString("phoneNumber"));
+            if(!object.getString("instagramUsername").equals("")) callback.runSocialIntent(instagram.openAccount(object.getString("instagramUsername")));
             skype.openSkypeChat(object.getString("skypeId"));
 
             callback.userSaved();
@@ -58,7 +58,7 @@ public class SharedUser implements AddContact.ContactCallback{
 
     public interface Callback {
         void addContact(ArrayList<ContentProviderOperation> operations);
-        void openIntent(Intent intent);
+        void runSocialIntent(Intent intent);
         void userSaved();
         void saveFailed();
     }

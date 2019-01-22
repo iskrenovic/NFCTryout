@@ -35,6 +35,7 @@ public class InputTwitterFragment extends Fragment {
 
     private Callback callback;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class InputTwitterFragment extends Fragment {
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://api.twitter.com/oauth/authenticate?oauth_token="+token));
-                callback.openIntent(intent);*/
+                callback.runIntent(intent);*/
                 callback.nextFragment();
             }
 
@@ -110,6 +111,6 @@ public class InputTwitterFragment extends Fragment {
         void setTwitterUserID(String userID);
         void nextFragment();
         void setTwitterUserName(String userName);
-        void openIntent(Intent intent);
+        void runIntent(Intent intent);
     }
 }

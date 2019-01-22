@@ -440,7 +440,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         user.setTwitterUserName(userName);
     }
 
-    public void openIntent(Intent intent) {
+    public void runIntent(Intent intent) {
         startActivity(intent);
     }
 
@@ -489,7 +489,7 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
     }
 
     @Override
-    public void openIntent(Intent intent) {
+    public void runSocialIntent(Intent intent) {
         startActivity(intent);
     }
 
@@ -551,5 +551,11 @@ public class AppActivity extends AppCompatActivity implements MainCallback,User.
         currentIndex = -2;
         inputInstagramFragment.setEdit(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputInstagramFragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void twitterClick() {
+        currentIndex = -2;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, this.inputTwitterFragment).commitAllowingStateLoss();
     }
 }

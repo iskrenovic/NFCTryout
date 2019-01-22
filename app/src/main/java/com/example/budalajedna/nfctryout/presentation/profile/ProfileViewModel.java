@@ -18,10 +18,14 @@ public class ProfileViewModel extends ViewModel {
     private MutableLiveData<Drawable> picture;
     private MutableLiveData<String> phoneNumber;
     private MutableLiveData<String> email;
+    private MutableLiveData<Boolean> whatsApp;
     private MutableLiveData<String> skypeId;
-    private MutableLiveData<String> twitterId;
+    private MutableLiveData<Boolean> twitter;
     private MutableLiveData<String> facebookId;
     private MutableLiveData<String> instagramId;
+
+    private MutableLiveData<String> ACTVIE;
+    private MutableLiveData<String> NOT_ACTIVE;
 
     private Callback callback;
 
@@ -31,9 +35,14 @@ public class ProfileViewModel extends ViewModel {
         phoneNumber = new MutableLiveData<>();
         email = new MutableLiveData<>();
         skypeId = new MutableLiveData<>();
-        twitterId = new MutableLiveData<>();
+        twitter = new MutableLiveData<>();
         facebookId = new MutableLiveData<>();
         instagramId = new MutableLiveData<>();
+        whatsApp = new MutableLiveData<>();
+        ACTVIE = new MutableLiveData<>();
+        NOT_ACTIVE = new MutableLiveData<>();
+        ACTVIE.setValue("AKTIVNO");
+        NOT_ACTIVE.setValue("NIJE_AKTIVNO");
     }
 
     public void init(Resources resources, User user, PictureTransform pictureTransform){
@@ -45,7 +54,8 @@ public class ProfileViewModel extends ViewModel {
         phoneNumber.setValue(user.getPhoneNumber());
         email.setValue(user.getEmail());
         skypeId.setValue(user.getSkypeId());
-        twitterId.setValue(user.getTwitterId());
+        whatsApp.setValue(user.getWhatsApp());
+        twitter.setValue(user.getTwitter());
         facebookId.setValue(user.getFacebookId());
         instagramId.setValue("@" + user.getInstagramUsername());
     }
@@ -71,6 +81,16 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public void instagramClick(){ callback.instagramClick();}
+
+    public void whatsAppClick(){
+        whatsApp.setValue(!whatsApp.getValue());
+        callback.whatsAppClick();
+    }
+
+    public void twitterClick(){
+        twitter.setValue(!twitter.getValue());
+        callback.twitterClick();
+    }
 
     public void textChanged(Editable editable){
         if(name.getValue()!=null) {
@@ -115,8 +135,20 @@ public class ProfileViewModel extends ViewModel {
         return skypeId;
     }
 
-    public LiveData<String> getTwitterId() {
-        return twitterId;
+    public LiveData<Boolean> getTwitter() {
+        return twitter;
+    }
+
+    public LiveData<Boolean> getWhatsApp(){
+        return whatsApp;
+    }
+
+    public LiveData<String> getActive(){
+        return ACTVIE;
+    }
+
+    public LiveData<String> getNotActive(){
+        return NOT_ACTIVE;
     }
 
     public interface Callback{
@@ -125,6 +157,8 @@ public class ProfileViewModel extends ViewModel {
         void numberClick();
         void skypeClick();
         void instagramClick();
+        void whatsAppClick();
+        void twitterClick();
     }
 
 }

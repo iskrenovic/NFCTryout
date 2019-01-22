@@ -107,10 +107,21 @@ public class ProfileFragment extends Fragment implements  ProfileViewModel.Callb
         callback.instagramClick();
     }
 
+    @Override
+    public void whatsAppClick() {
+        mainCallback.getUser().clickWhatsApp();
+    }
+
+    @Override
+    public void twitterClick() {
+        callback.twitterClick();
+    }
+
     public interface Callback {
         void emailClick();
         void numberClick();
         void skypeClick();
         void instagramClick();
+        void twitterClick();
     }
 }

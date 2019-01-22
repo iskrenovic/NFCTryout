@@ -1,5 +1,7 @@
 package com.example.budalajedna.nfctryout.datahandling;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 public class User {
@@ -23,11 +25,10 @@ public class User {
     private String skypeId = "";
     private boolean sSkype = false;
 
-
     private String instagramUsername ="";
     private boolean sInstagram = false;
 
-    private boolean sWhatsApp = false;
+    private boolean whatsApp = false;
 
     private Callback callback;
 
@@ -51,7 +52,7 @@ public class User {
             object.put("sTwitter", sTwitter);
             object.put("sSkype", sSkype);
             object.put("skypeId", skypeId);
-            object.put("sWhatsApp", sWhatsApp);
+            object.put("whatsApp", whatsApp);
             object.put("instagramUsername",instagramUsername);
             object.put("sInstagram", sInstagram);
             object.put("twitterUserName",twitterUserName);
@@ -65,16 +66,18 @@ public class User {
         JSONObject object = new JSONObject();
         try {
             object.put("contactName", contactName);
-            object.put("profilePicture", profilePicture);
+            object.put("profilePicture","");
             object.put("phoneNumber", sPhone ? phoneNumber : "");
             object.put("email", sEmail ? email : "");
             object.put("facebookId", sFacebook ? facebookId : "");
             object.put("twitterId", sTwitter ? twitterId : "");
             object.put("skypeId", sSkype ? skypeId : "");
             object.put("instagramUsername", sInstagram ? instagramUsername : "");
-            object.put("sWhatsApp", sWhatsApp);
+            object.put("whatsApp", whatsApp);
         }
-        catch (Exception e){}
+        catch (Exception e){
+            Log.d("SEND","FAILED");
+        }
         return object.toString();
     }
 
@@ -93,7 +96,7 @@ public class User {
             sTwitter = object.getBoolean("sTwitter");
             skypeId = object.getString("skypeId");
             sSkype = object.getBoolean("sSkype");
-            sWhatsApp = object.getBoolean("sWhatsApp");
+            whatsApp = object.getBoolean("whatsApp");
             twitterUserName = object.getString("twitterUserName");
             sInstagram = object.getBoolean("sInstagram");
             instagramUsername = object.getString("instagramUsername");
@@ -104,7 +107,7 @@ public class User {
     }
 
     public boolean[] getClicked(){
-        return new boolean[] {sPhone,sEmail,sSkype, sWhatsApp, sTwitter, sFacebook, sInstagram};
+        return new boolean[] {sPhone,sEmail,sSkype, whatsApp, sTwitter, sFacebook, sInstagram};
     }
 
     public String getPhoneNumber(){
@@ -129,12 +132,20 @@ public class User {
         return profilePicture;
     }
 
+    public boolean getTwitter(){
+        return sTwitter;
+    }
+
     public String getInstagramUsername() {
         return instagramUsername;
     }
 
     public String getName() {
         return contactName;
+    }
+
+    public boolean getWhatsApp(){
+        return whatsApp;
     }
 
     public void setContactName(String contactName){
@@ -160,7 +171,7 @@ public class User {
     }
 
     public void clickWhatsApp(){
-        sWhatsApp = !sWhatsApp;
+        whatsApp = !whatsApp;
     }
 
     public void clickInstagram(){sInstagram = !sInstagram;}

@@ -40,7 +40,11 @@ public class InputInstagramFragment extends Fragment implements InputInstagramVi
         viewModel = ViewModelProviders.of(this).get(InputInstagramViewModel.class);
         viewModel.setCallback(this);
 
+        if(edit) viewModel.setUsername(mainCallback.getUser().getInstagramUsername());
+
         binding.setVm(this.viewModel);
+
+
 
         return  view;
     }
